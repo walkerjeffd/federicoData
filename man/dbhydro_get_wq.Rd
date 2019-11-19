@@ -26,7 +26,7 @@ Get water quality data from dbhydro for specified station(s) and date range
 dbhydro_get_wq(
   station_ids = "LOX3",
   date_min = "2019-09-01",
-  date_max = "2019-09-30",
+  date_max = "2019-10-31",
   test_name = "PHOSPHATE, TOTAL AS P"
 )
 }

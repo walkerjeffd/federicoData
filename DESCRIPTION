@@ -20,4 +20,5 @@ Imports:
     logger,
     tibble,
     lubridate,
-    janitor
+    janitor,
+    purrr

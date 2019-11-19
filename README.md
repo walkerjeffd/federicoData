@@ -44,7 +44,27 @@ dbhydro_get_hydro(
 dbhydro_get_wq(
   station_ids = "LOX3",
   date_min = "2019-09-01",
-  date_max = "2019-09-30",
+  date_max = "2019-10-31",
   test_name = "PHOSPHATE, TOTAL AS P"
+)
+```
+
+Due to API limits on DBHYDRO, it is sometimes necessary to fetch data in
+batches using the `dbhydro_batch_get_*()` functions.
+
+``` r
+# Not Run
+dbhydro_batch_get_hydro(
+  dbkeys = c("91599", "91473", "91663"),
+  date_min = "2019-10-01",
+  date_max = "2019-10-31",
+  batch_size = 2
+)
+dbhydro_batch_get_wq(
+  station_ids = c("LOX3", "LOX4", "LOX5"),
+  date_min = "2019-09-01",
+  date_max = "2019-10-31",
+  test_name = "PHOSPHATE, TOTAL AS P",
+  batch_size = 2
 )
 ```

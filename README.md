@@ -26,4 +26,6 @@ This is a basic example which shows you how to solve a common problem:
 
 ``` r
 library(faahydro)
+add_one(2)
+#> [1] 3
 ```

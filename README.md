@@ -20,12 +20,31 @@ This package is currently only available on github. Use the
 devtools::install_github("walkerjeffd/faahydro")
 ```
 
-## Example
-
-This is a basic example which shows you how to solve a common problem:
+Then load the package
 
 ``` r
 library(faahydro)
-add_one(2)
-#> [1] 3
+```
+
+## Fetching Data from DBHYDRO
+
+The `dbhydro_get_*()` functions are used to fetch hydrologic and water
+quality data from DBHYDRO. These functions call the respective `get_*()`
+functions from the `dbhydroR` package, and then perform some additional
+cleaning of the dataset (e.g., parsing dates, removing duplicate
+columns).
+
+``` r
+# Not Run
+dbhydro_get_hydro(
+  dbkeys = "91599",
+  date_min = "2019-10-01",
+  date_max = "2019-10-31"
+)
+dbhydro_get_wq(
+  station_ids = "LOX3",
+  date_min = "2019-09-01",
+  date_max = "2019-09-30",
+  test_name = "PHOSPHATE, TOTAL AS P"
+)
 ```

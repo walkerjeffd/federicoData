@@ -25,4 +25,5 @@ Imports:
     httr,
     rvest,
     dplyr,
-    stringr
+    stringr,
+    tidyr

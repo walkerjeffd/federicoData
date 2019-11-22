@@ -12,7 +12,7 @@
 #' dms_to_ddeg(805649.2)
 #' dms_to_ddeg(c(262551.3, 805649.2))
 dms_to_ddeg <- function(x) {
-  stopifnot(class(x) == "numeric")
+  stopifnot(class(x) %in% c("numeric", "integer"))
   x_deg <- floor(x / 1e4)
   x_min <- floor((x - x_deg * 1e4) / 1e2)
   x_sec <- x - x_deg * 1e4 - x_min * 1e2

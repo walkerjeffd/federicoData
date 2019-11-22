@@ -21,4 +21,8 @@ Imports:
     tibble,
     lubridate,
     janitor,
-    purrr
+    purrr,
+    httr,
+    rvest,
+    dplyr,
+    stringr

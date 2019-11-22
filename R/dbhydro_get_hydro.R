@@ -46,6 +46,8 @@ dbhydro_get_hydro <- function (dbkeys, date_min, date_max) {
     df$date <- lubridate::as_date(df$date)
     df$revision_date <- lubridate::dmy(df$revision_date)
     df$value <- df$data_value
+    df$lat <- dms_to_ddeg(df$lat)
+    df$long <- -dms_to_ddeg(df$long)
     df <- df[, -which(names(df) %in% c("daily_date", "data_value"))]
   }
 

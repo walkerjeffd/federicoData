@@ -1,8 +1,8 @@
-#' Get hydrologic data from dbhydro
+#' Get hydrologic data from DBHYDRO
 #'
-#' Get hydrologic data from dbhydro for specified dbkey(s) and date range
+#' Get hydrologic data from DBHYDRO for specified DBKEY(s) and date range
 #'
-#' @param dbkeys character vector containing one or more dbkeys
+#' @param dbkeys character vector of DBKEY(s)
 #' @param date_min start date
 #' @param date_max end date
 #'
@@ -10,11 +10,10 @@
 #' @export
 #'
 #' @examples
-#' dbhydro_get_hydro(
-#'   dbkeys = "91599",
-#'   date_min = "2019-10-01",
-#'   date_max = "2019-10-31"
-#' )
+#' \dontrun{
+#' dbhydro_get_hydro(dbkeys = "91599", date_min = "2019-10-01", date_max = "2019-10-31")
+#' }
+#' @importFrom dplyr %>%
 dbhydro_get_hydro <- function (dbkeys, date_min, date_max) {
   logger::log_debug("fetching hydro data from dbhydro for {length(dbkeys)} dbkey(s) from {date_min} to {date_max}")
 
@@ -41,14 +40,18 @@ dbhydro_get_hydro <- function (dbkeys, date_min, date_max) {
   df <- tibble::as_tibble(df)
 
   if (nrow(df) > 0) {
-    # clean columns
-    df <- janitor::clean_names(df)
-    df$date <- lubridate::as_date(df$date)
-    df$revision_date <- lubridate::dmy(df$revision_date)
-    df$value <- df$data_value
-    df$lat <- dms_to_ddeg(df$lat)
-    df$long <- -dms_to_ddeg(df$long)
-    df <- df[, -which(names(df) %in% c("daily_date", "data_value"))]
+    df <- janitor::clean_names(df) %>%
+      dplyr::mutate_(
+        date = ~ lubridate::as_date(date),
+        revision_date = ~ lubridate::dmy(revision_date),
+        value = ~ as.numeric(data_value),
+        lat = ~ dms_to_ddeg(lat),
+        long = ~ -dms_to_ddeg(long)
+      ) %>%
+      dplyr::select_(
+        ~ -daily_date,
+        ~ -data_value
+      )
   }
 
   logger::log_debug("received {nrow(df)} record(s) from dbhydro")

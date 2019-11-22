@@ -1,6 +1,6 @@
-#' Get water quality data from dbhydro in batches
+#' Get water quality data from DBHYDRO in batches
 #'
-#' Get water quality data from dbhydro for specified station(s) and date range
+#' Get water quality data from DBHYDRO for specified station(s) and date range
 #' in batches of specified size
 #'
 #' @param station_ids character vector containing one or more station_id's
@@ -13,6 +13,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' dbhydro_batch_get_wq(
 #'   station_ids = c("LOX3", "LOX4", "LOX5"),
 #'   date_min = "2019-09-01",
@@ -20,6 +21,7 @@
 #'   test_name = "PHOSPHATE, TOTAL AS P",
 #'   batch_size = 2
 #' )
+#' }
 dbhydro_batch_get_wq <- function (station_ids, date_min, date_max, test_name = "PHOSPHATE, TOTAL AS P", batch_size = 5) {
   logger::log_info("fetching wq data from dbhydro for {length(station_ids)} station(s) from {date_min} to {date_max} for test {test_name} in batches of size {batch_size}")
 

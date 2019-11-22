@@ -2,12 +2,12 @@
 % Please edit documentation in R/dbhydro_get_hydro.R
 \name{dbhydro_get_hydro}
 \alias{dbhydro_get_hydro}
-\title{Get hydrologic data from dbhydro}
+\title{Get hydrologic data from DBHYDRO}
 \usage{
 dbhydro_get_hydro(dbkeys, date_min, date_max)
 }
 \arguments{
-\item{dbkeys}{character vector containing one or more dbkeys}
+\item{dbkeys}{character vector of DBKEY(s)}
 
 \item{date_min}{start date}
 
@@ -17,12 +17,10 @@ dbhydro_get_hydro(dbkeys, date_min, date_max)
 tibble containing raw data, or empty tibble (no columns) if no data found
 }
 \description{
-Get hydrologic data from dbhydro for specified dbkey(s) and date range
+Get hydrologic data from DBHYDRO for specified DBKEY(s) and date range
 }
 \examples{
-dbhydro_get_hydro(
-  dbkeys = "91599",
-  date_min = "2019-10-01",
-  date_max = "2019-10-31"
-)
+\dontrun{
+dbhydro_get_hydro(dbkeys = "91599", date_min = "2019-10-01", date_max = "2019-10-31")
+}
 }

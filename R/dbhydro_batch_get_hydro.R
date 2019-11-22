@@ -1,23 +1,25 @@
-#' Get hydrologic data from dbhydro in batches
+#' Get hydrologic data from DBHYDRO in batches
 #'
-#' Get hydrologic data from dbhydro for specified dbkey(s) and date range
+#' Get hydrologic data from DBHYDRO for specified DBKEY(s) and date range
 #' in batches of specified size
 #'
-#' @param dbkeys character vector containing one or more dbkeys
+#' @param dbkeys character vector of DBKEY(s)
 #' @param date_min start date
 #' @param date_max end date
-#' @param batch_size number of dbkeys for each batch
+#' @param batch_size number of DBKEYs for each batch
 #'
 #' @return tibble containing raw data, or empty tibble (no columns) if no data found
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' dbhydro_batch_get_hydro(
 #'   dbkeys = c("91599", "91473", "91663"),
 #'   date_min = "2019-10-01",
 #'   date_max = "2019-10-31",
 #'   batch_size = 2
 #' )
+#' }
 dbhydro_batch_get_hydro <- function (dbkeys, date_min, date_max, batch_size = 5) {
   logger::log_info("fetching hydro data from dbhydro for {length(dbkeys)} dbkey(s) from {date_min} to {date_max} in batches of size {batch_size}")
 

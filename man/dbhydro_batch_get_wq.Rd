@@ -2,7 +2,7 @@
 % Please edit documentation in R/dbhydro_batch_get_wq.R
 \name{dbhydro_batch_get_wq}
 \alias{dbhydro_batch_get_wq}
-\title{Get water quality data from dbhydro in batches}
+\title{Get water quality data from DBHYDRO in batches}
 \usage{
 dbhydro_batch_get_wq(station_ids, date_min, date_max,
   test_name = "PHOSPHATE, TOTAL AS P", batch_size = 5)
@@ -22,10 +22,11 @@ dbhydro_batch_get_wq(station_ids, date_min, date_max,
 tibble containing raw data, or empty tibble (no columns) if no data found
 }
 \description{
-Get water quality data from dbhydro for specified station(s) and date range
+Get water quality data from DBHYDRO for specified station(s) and date range
 in batches of specified size
 }
 \examples{
+\dontrun{
 dbhydro_batch_get_wq(
   station_ids = c("LOX3", "LOX4", "LOX5"),
   date_min = "2019-09-01",
@@ -33,4 +34,5 @@ dbhydro_batch_get_wq(
   test_name = "PHOSPHATE, TOTAL AS P",
   batch_size = 2
 )
+}
 }

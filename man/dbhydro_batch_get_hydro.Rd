@@ -2,31 +2,33 @@
 % Please edit documentation in R/dbhydro_batch_get_hydro.R
 \name{dbhydro_batch_get_hydro}
 \alias{dbhydro_batch_get_hydro}
-\title{Get hydrologic data from dbhydro in batches}
+\title{Get hydrologic data from DBHYDRO in batches}
 \usage{
 dbhydro_batch_get_hydro(dbkeys, date_min, date_max, batch_size = 5)
 }
 \arguments{
-\item{dbkeys}{character vector containing one or more dbkeys}
+\item{dbkeys}{character vector of DBKEY(s)}
 
 \item{date_min}{start date}
 
 \item{date_max}{end date}
 
-\item{batch_size}{number of dbkeys for each batch}
+\item{batch_size}{number of DBKEYs for each batch}
 }
 \value{
 tibble containing raw data, or empty tibble (no columns) if no data found
 }
 \description{
-Get hydrologic data from dbhydro for specified dbkey(s) and date range
+Get hydrologic data from DBHYDRO for specified DBKEY(s) and date range
 in batches of specified size
 }
 \examples{
+\dontrun{
 dbhydro_batch_get_hydro(
   dbkeys = c("91599", "91473", "91663"),
   date_min = "2019-10-01",
   date_max = "2019-10-31",
   batch_size = 2
 )
+}
 }

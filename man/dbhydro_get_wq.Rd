@@ -2,7 +2,7 @@
 % Please edit documentation in R/dbhydro_get_wq.R
 \name{dbhydro_get_wq}
 \alias{dbhydro_get_wq}
-\title{Get water quality data from dbhydro}
+\title{Get water quality data from DBHYDRO}
 \usage{
 dbhydro_get_wq(station_ids, date_min, date_max,
   test_name = "PHOSPHATE, TOTAL AS P")
@@ -20,13 +20,15 @@ dbhydro_get_wq(station_ids, date_min, date_max,
 tibble containing raw data, or empty tibble (no columns) if no data found
 }
 \description{
-Get water quality data from dbhydro for specified station(s) and date range
+Get water quality data from DBHYDRO for specified station(s) and date range
 }
 \examples{
+\dontrun{
 dbhydro_get_wq(
   station_ids = "LOX3",
   date_min = "2019-09-01",
   date_max = "2019-10-31",
   test_name = "PHOSPHATE, TOTAL AS P"
 )
+}
 }

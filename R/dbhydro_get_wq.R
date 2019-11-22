@@ -36,17 +36,8 @@ dbhydro_get_wq <- function (station_ids, date_min, date_max, test_name = "PHOSPH
     }
   )
 
-  df <- tibble::as_tibble(df_raw)
-
-  if (nrow(df) > 0) {
-    # clean columns
-    df <- janitor::clean_names(df)
-    df$date <- lubridate::as_date(df$date)
-    df$datetime <- lubridate::dmy_hm(df$collection_date, tz = "US/Eastern")
-    df$measure_date <- lubridate::dmy_hm(df$measure_date, tz = "US/Eastern")
-    df$receive_date <- lubridate::dmy_hm(df$receive_date, tz = "US/Eastern")
-    df <- df[, -which(names(df) %in% c("collection_date"))]
-  }
+  df <- tibble::as_tibble(df_raw) %>%
+    janitor::clean_names()
 
   logger::log_debug("received {nrow(df)} record(s) from dbhydro")
   df

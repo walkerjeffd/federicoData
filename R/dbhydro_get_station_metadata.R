@@ -7,6 +7,7 @@
 #' @return tibble of metadata for each station_id
 #' @export
 #'
+#' @importFrom rlang .data
 #' @examples
 #' \dontrun{
 #' dbhydro_get_station_metadata(station_ids = c("L3"))
@@ -40,26 +41,26 @@ dbhydro_get_station_metadata <- function (station_ids, query = list(), batch_siz
     df <- tbl[-1, ] %>%
       tidyr::pivot_wider(names_from = "X1", values_from = "X2") %>%
       janitor::clean_names() %>%
-      dplyr::select_(
-        station_id = ~station,
-        site = ~site,
-        type = ~type,
-        latitude = ~latitude_ddmmss_sss,
-        longitude = ~longitude_ddmmss_sss,
-        x_coord = ~x_coord_ft_nad83,
-        y_coord = ~y_coord_ft_nad83,
-        county = ~county,
-        basin = ~basin,
-        sec = ~section,
-        twp = ~township,
-        rng = ~range,
-        description = ~description
+      dplyr::select(
+        station_id = .data$station,
+        site = .data$site,
+        type = .data$type,
+        latitude = .data$latitude_ddmmss_sss,
+        longitude = .data$longitude_ddmmss_sss,
+        x_coord = .data$x_coord_ft_nad83,
+        y_coord = .data$y_coord_ft_nad83,
+        county = .data$county,
+        basin = .data$basin,
+        sec = .data$section,
+        twp = .data$township,
+        rng = .data$range,
+        description = .data$description
       ) %>%
       dplyr::mutate_at(c("latitude", "longitude", "x_coord", "y_coord"), as.numeric) %>%
       dplyr::mutate_at(c("sec", "twp", "rng"), as.integer) %>%
-      dplyr::mutate_(
-        latitude = ~dms_to_ddeg(latitude),
-        longitude = ~-dms_to_ddeg(longitude)
+      dplyr::mutate(
+        latitude = dms_to_ddeg(.data$latitude),
+        longitude = -dms_to_ddeg(.data$longitude)
       )
   } else {
     tbl <- httr::content(response, "parsed") %>%
@@ -68,17 +69,17 @@ dbhydro_get_station_metadata <- function (station_ids, query = list(), batch_siz
     df <- tbl %>%
       janitor::clean_names() %>%
       tibble::as_tibble() %>%
-      dplyr::select_(~-get_data, ~-show_map, ~-nearby_stations, ~-attachments) %>%
-      dplyr::rename_(
-        station_id = ~station,
-        latitude = ~latitude_ddmmss_sss,
-        longitude = ~longitude_ddmmss_sss,
-        x_coord = ~x_coord_ft,
-        y_coord = ~y_coord_ft
+      dplyr::select(-c("get_data", "show_map", "nearby_stations", "attachments")) %>%
+      dplyr::rename(
+        station_id = .data$station,
+        latitude = .data$latitude_ddmmss_sss,
+        longitude = .data$longitude_ddmmss_sss,
+        x_coord = .data$x_coord_ft,
+        y_coord = .data$y_coord_ft
       ) %>%
-      dplyr::mutate_(
-        latitude = ~dms_to_ddeg(latitude),
-        longitude = ~-dms_to_ddeg(longitude)
+      dplyr::mutate(
+        latitude = dms_to_ddeg(.data$latitude),
+        longitude = -dms_to_ddeg(.data$longitude)
       )
   }
 

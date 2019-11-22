@@ -37,22 +37,8 @@ dbhydro_get_hydro <- function (dbkeys, date_min, date_max) {
     df <- df_raw
   }
 
-  df <- tibble::as_tibble(df)
-
-  if (nrow(df) > 0) {
-    df <- janitor::clean_names(df) %>%
-      dplyr::mutate_(
-        date = ~ lubridate::as_date(date),
-        revision_date = ~ lubridate::dmy(revision_date),
-        value = ~ as.numeric(data_value),
-        lat = ~ dms_to_ddeg(lat),
-        long = ~ -dms_to_ddeg(long)
-      ) %>%
-      dplyr::select_(
-        ~ -daily_date,
-        ~ -data_value
-      )
-  }
+  df <- tibble::as_tibble(df) %>%
+    janitor::clean_names()
 
   logger::log_debug("received {nrow(df)} record(s) from dbhydro")
   df

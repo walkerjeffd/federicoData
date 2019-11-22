@@ -2,9 +2,12 @@
 
 export(dbhydro_batch_get_hydro)
 export(dbhydro_batch_get_wq)
+export(dbhydro_clean_hydro)
+export(dbhydro_clean_wq)
 export(dbhydro_get_dbkey_metadata)
 export(dbhydro_get_hydro)
 export(dbhydro_get_station_metadata)
 export(dbhydro_get_wq)
 export(dms_to_ddeg)
 importFrom(dplyr,"%>%")
+importFrom(rlang,.data)

@@ -13,6 +13,9 @@ dbhydro_get_dbkey_metadata(dbkeys, query = list(), batch_size = 100)
 
 \item{batch_size}{number of DBKEYs per batch (API limit)}
 }
+\value{
+tibble containing metadata for specified DBKEYs
+}
 \description{
 Get DBKEY metadata from DBHYDRO
 }

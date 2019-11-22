@@ -4,9 +4,10 @@
 #' @param query list containing additional query parameters to pass with request
 #' @param batch_size number of DBKEYs per batch (API limit)
 #'
-#' @return
+#' @return tibble containing metadata for specified DBKEYs
 #' @export
 #'
+#' @importFrom rlang .data
 #' @examples
 #' \dontrun{
 #' dbhydro_get_dbkey_metadata(dbkeys = c("KQ646"))
@@ -34,16 +35,16 @@ dbhydro_get_dbkey_metadata <- function (dbkeys, query = list(), batch_size = 100
     janitor::clean_names()
   df <- tbl %>%
     tibble::as_tibble() %>%
-    dplyr::rename_(
-      station_id = ~station,
-      site_group = ~group
+    dplyr::rename(
+      station_id = .data$station,
+      site_group = .data$group
     ) %>%
-    dplyr::select_(~-get_data) %>%
-    dplyr::mutate_(
-      start_date = ~lubridate::dmy(start_date),
-      end_date = ~lubridate::dmy(end_date),
-      latitude = ~dms_to_ddeg(latitude),
-      longitude = ~-dms_to_ddeg(longitude)
+    dplyr::select(-c("get_data")) %>%
+    dplyr::mutate(
+      start_date = lubridate::dmy(.data$start_date),
+      end_date = lubridate::dmy(.data$end_date),
+      latitude = dms_to_ddeg(.data$latitude),
+      longitude = -dms_to_ddeg(.data$longitude)
     )
 
   if (length(dbkeys) <= batch_size) {

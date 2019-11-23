@@ -29,4 +29,6 @@ Imports:
     dplyr,
     stringr,
     tidyr,
-    rlang
+    rlang,
+    DBI,
+    RPostgreSQL

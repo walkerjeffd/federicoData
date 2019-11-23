@@ -10,7 +10,7 @@ dbhydro_clean_wq(x)
 \item{x}{tibble returned from dbhydro_get_wq()}
 }
 \value{
-tibble with primary columns
+tibble with cleaned water quality data
 }
 \description{
 Clean water quality dataset from DBHYDRO

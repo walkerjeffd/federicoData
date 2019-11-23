@@ -2,7 +2,7 @@
 #'
 #' @param x tibble returned from dbhydro_get_wq()
 #'
-#' @return tibble with primary columns
+#' @return tibble with cleaned water quality data
 #' @export
 #'
 #' @importFrom rlang .data
@@ -19,36 +19,134 @@
 dbhydro_clean_wq <- function (x) {
   logger::log_debug("cleaning wq dataset from DBHYDRO (nrow = {nrow(x)})")
 
+  if (any(!x$test_name %in% dbhydro_wq_params$test_name)) {
+    missing_values <- setdiff(unique(x$test_name), dbhydro_wq_params$test_name)
+    logger::log_warn("dataset contains test_name values that are not defined in dbhydro_wq_params ({paste0(missing_values, collapse = ',')})")
+  }
+
   x %>%
     dplyr::mutate_at(
       c(
-        "project_code", "station_id", "sample_id", "sample_type_new", "collection_method",
-        "matrix", "test_name", "qc_type", "sample_comments", "result_comments",
-        "uncertainty", "units", "remark_code", "flag", "depth_unit"
+        "project_code",
+        "station_id",
+        "sample_id",
+        "sample_type_new",
+        "collection_method",
+        "depth_unit",
+        "matrix",
+        "test_name",
+        "method",
+        "uncertainty",
+        "units",
+        "remark_code",
+        "flag",
+        "lims_number",
+        "collection_agency",
+        "source",
+        "owner",
+        "validation_level",
+        "validator",
+        "sampling_purpose",
+        "data_investigation",
+        "qc_type",
+        "program_type",
+        "sample_comments",
+        "result_comments",
+        "first_trigger_date",
+        "collection_date",
+        "measure_date",
+        "receive_date",
+        "filtration_date"
       ),
       as.character
     ) %>%
     dplyr::mutate_at(
-      c("depth", "value", "sigfig_value", "mdl", "pql", "rdl"),
+      c(
+        "depth",
+        "value",
+        "sigfig_value",
+        "mdl",
+        "pql",
+        "rdl",
+        "t_depth",
+        "upper_depth",
+        "lower_depth",
+        "dcs_meters"
+      ),
       as.numeric
     ) %>%
-    dplyr::mutate_at(c("test_number"), as.integer) %>%
+    dplyr::mutate_at(
+      c(
+        "test_number",
+        "storet_code",
+        "sample_type",
+        "discharge",
+        "up_down_stream",
+        "weather_code",
+        "ndec"),
+      as.integer
+    ) %>%
     dplyr::mutate(
-      date = lubridate::as_date(.data$date),
-      datetime = lubridate::dmy_hm(.data$collection_date, tz = "US/Eastern"),
-      measure_date = lubridate::dmy_hm(.data$measure_date, tz = "US/Eastern"),
-      receive_date = lubridate::dmy_hm(.data$receive_date, tz = "US/Eastern")
+      date = lubridate::as_date(.data$date)
+    ) %>%
+    dplyr::mutate_at(
+      c("first_trigger_date", "collection_date", "measure_date", "receive_date", "filtration_date"),
+      lubridate::dmy_hm,
+      tz = "US/Eastern"
+    ) %>%
+    dplyr::left_join(
+      dbhydro_wq_params,
+      by = "test_name"
     ) %>%
     dplyr::select(c(
-      "project_code", "station_id",
-      "sample_id", "date",
+      "station_id",
+      "wq_param",
+      "date",
+      "value",
+      "units",
+      "flag",
+      "sample_type_new",
+      "collection_method",
+      "project_code",
+      "sample_id",
+      "depth",
+      "depth_unit",
+      "matrix",
+      "test_number",
       "test_name",
-      "value", "units",
-      "sample_type_new", "collection_method",
-      "sigfig_value", "mdl", "pql", "rdl", "uncertainty",
-      "test_number", "qc_type", "matrix",
-      "datetime", "depth", "depth_unit",
-      "flag", "remark_code",
-      "sample_comments", "result_comments"
+      "storet_code",
+      "method",
+      "first_trigger_date",
+      "collection_date",
+      "measure_date",
+      "receive_date",
+      "sigfig_value",
+      "uncertainty",
+      "mdl",
+      "pql",
+      "rdl",
+      "remark_code",
+      "lims_number",
+      "collection_agency",
+      "source",
+      "owner",
+      "validation_level",
+      "validator",
+      "sampling_purpose",
+      "data_investigation",
+      "t_depth",
+      "upper_depth",
+      "lower_depth",
+      "dcs_meters",
+      "filtration_date",
+      "sample_type",
+      "qc_type",
+      "discharge",
+      "up_down_stream",
+      "weather_code",
+      "program_type",
+      "ndec",
+      "sample_comments",
+      "result_comments"
     ))
 }

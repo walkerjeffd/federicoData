@@ -40,7 +40,9 @@ Then load the package
 library(faahydro)
 ```
 
-## Fetching Data from DBHYDRO
+## DBHYDRO Data
+
+### Fetching Data
 
 The `dbhydro_get_*()` functions are used to fetch hydrologic and water quality data from DBHYDRO.
 These functions call the respective `get_*()` functions from the `dbhydroR` package,
@@ -78,6 +80,28 @@ dbhydro_batch_get_wq(
   test_name = "PHOSPHATE, TOTAL AS P",
   batch_size = 2
 )
+```
+
+### Cleaning Data
+
+`TODO`
+
+## Database
+
+SQL scripts to create the database can be found in the `inst/sql` folder.
+
+### Set Up
+
+To set up a new database, first create it.
+
+``` sh
+createdb faadb
+```
+
+Then install the schema for each set of tables.
+
+``` sh
+psql -d faadb -f inst/sql/schema-dbhydro.sql
 ```
 
 

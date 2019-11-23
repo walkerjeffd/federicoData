@@ -37,7 +37,6 @@ cleaning of the dataset (e.g., parsing dates, removing duplicate
 columns).
 
 ``` r
-# Not Run
 dbhydro_get_hydro(
   dbkeys = "91599",
   date_min = "2019-10-01",
@@ -55,7 +54,6 @@ Due to API limits on DBHYDRO, it is sometimes necessary to fetch data in
 batches using the `dbhydro_batch_get_*()` functions.
 
 ``` r
-# Not Run
 dbhydro_batch_get_hydro(
   dbkeys = c("91599", "91473", "91663"),
   date_min = "2019-10-01",
@@ -73,7 +71,26 @@ dbhydro_batch_get_wq(
 
 ### Cleaning Data
 
-`TODO`
+The `dbhydro_clean_*()` functions can be used to clean the DBHYDRO
+datasets. This must be done before these datasets can be inserted into
+the database.
+
+``` r
+df_hydro_raw <- dbhydro_get_hydro(
+  dbkeys = c("91599", "91473", "91663"),
+  date_min = "2019-10-01",
+  date_max = "2019-10-31"
+)
+df_hydro <- dbhydro_clean_hydro(df_hydro_raw)
+
+db_wq_raw <- dbhydro_get_wq(
+  station_ids = c("LOX3", "LOX4", "LOX5"),
+  date_min = "2019-09-01",
+  date_max = "2019-10-31",
+  test_name = "PHOSPHATE, TOTAL AS P"
+)
+df_wq <- dbhydro_clean_wq(df_wq_raw)
+```
 
 ## Database
 
@@ -92,4 +109,30 @@ Then install the schema for each set of tables.
 
 ``` sh
 psql -d faadb -f inst/sql/schema-dbhydro.sql
+```
+
+### Connecting
+
+The `db_connect()` and `db_disconnect()` functions are simple wrappers
+for DBI to connect/disconnect to the database once it is created. The
+`password` argument to `db_connect()` can be omitted if the
+authentication is set in a `.pgpass`
+file.
+
+``` r
+con <- db_connect(host = "localhost", dbname = "faadb", user = "me", password = "mypassword")
+db_disconnect(con)
+```
+
+### Adding DBHYDRO Data
+
+#### Stations
+
+Use `db_add_dbhydro_stations()` to add stations, This function will
+fetch the station metadata from DBHYDRO, and will only succeed if the
+metadata for all specified stations is received. It will also only add
+metadata for stations that do not already exist in the database.
+
+``` r
+db_add_dbhydro_stations(con, station_ids = c("LOX3", "LOX6"))
 ```

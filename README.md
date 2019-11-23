@@ -128,10 +128,14 @@ db_disconnect(con)
 
 #### Stations
 
-Use `db_add_dbhydro_stations()` to add stations, This function will
-fetch the station metadata from DBHYDRO, and will only succeed if the
-metadata for all specified stations is received. It will also only add
-metadata for stations that do not already exist in the database.
+Use `db_add_dbhydro_stations()` to add new DBHYDRO stations to the
+database.
+
+This function will fetch the station metadata from DBHYDRO, and will
+only succeed if the metadata for all specified stations is received. It
+will also only add metadata for stations that do not already exist in
+the database (i.e., new stations). The function returns `TRUE` if all
+new stations were successfully added, otherwise it returns `FALSE`.
 
 ``` r
 db_add_dbhydro_stations(con, station_ids = c("LOX3", "LOX6"))

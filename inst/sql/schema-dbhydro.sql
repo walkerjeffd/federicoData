@@ -28,8 +28,8 @@ CREATE TABLE dbhydro_dbkeys (
   stat TEXT,
   recorder TEXT,
   agency TEXT,
-  start_date TIMESTAMPTZ,
-  end_date TIMESTAMPTZ,
+  start_date DATE,
+  end_date DATE,
   strata INTEGER,
   op_num BOOLEAN,
   struct TEXT

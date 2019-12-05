@@ -11,7 +11,7 @@ db_get_dbhydro_dbkeys(con, dbkeys = NULL, include_stations = FALSE)
 
 \item{dbkeys}{character vector of DBKEY(s) to retrieve, or NULL to retrieve all (default)}
 
-\item{include_station}{include station}
+\item{include_stations}{include station metadata (join dbhydro_stations table)}
 }
 \value{
 data frame
@@ -23,6 +23,10 @@ Get DBHYDRO DBKEYs from database
 \dontrun{
 db_get_dbhydro_dbkeys(con) # get all DBKEYs
 db_get_dbhydro_dbkeys(con, dbkeys = c("91346", "91347"))
-db_get_dbhydro_dbkeys(con, dbkeys = c("91346", "91347"), include_stations = TRUE) # include station metadata
+db_get_dbhydro_dbkeys(
+  con,
+  dbkeys = c("91346", "91347"),
+  include_stations = TRUE
+) # include station metadata
 }
 }

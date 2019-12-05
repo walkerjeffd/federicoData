@@ -124,9 +124,9 @@ con <- db_connect(host = "localhost", dbname = "faadb", user = "me", password = 
 db_disconnect(con)
 ```
 
-### Adding Data
+### Manage DBHYDRO Data
 
-#### DBHYDRO Stations
+#### Add Stations
 
 Use `db_add_dbhydro_stations()` to add new DBHYDRO stations to the
 database.
@@ -141,7 +141,7 @@ new stations were successfully added, otherwise it returns `FALSE`.
 db_add_dbhydro_stations(con, station_ids = c("LOX3", "LOX6"))
 ```
 
-#### DBHYDRO DBKEYs
+#### DBKEYs
 
 Use `db_add_dbhydro_dbkeys()` to add new DBHYDRO DBKEYs to the database.
 
@@ -154,5 +154,24 @@ adds any stations corresponding to the new DBKEYs, which don’t already
 exist in the database.
 
 ``` r
-db_add_dbhydro_dbkeys(con, c("91346", "91347"))
+db_add_dbhydro_dbkeys(con, dbkeys = c("91473", "91599"))
+```
+
+Use `db_get_dbhydro_dbkeys()` to get metadata for DBKEYs from database.
+
+``` r
+db_get_dbhydro_dbkeys(con) # get all DBKEYs
+db_get_dbhydro_dbkeys(con, dbkeys = c("91473", "91599")) # get specific DBKEYs
+db_get_dbhydro_dbkeys(con, dbkeys = c("91473", "91599"), include_stations = TRUE) # include station metadata
+```
+
+#### Hydrologic Data
+
+After fetching data from DBHYDRO, use `db_upsert_dbhydro_hydro()` to
+insert/update those records in the database.
+
+``` r
+# first fetch the data (must be in 'cleaned' form)
+df <- dbhydro_get_hydro(dbkeys = c("91473", "91599"), date_min = "2019-10-01", date_max = "2019-11-30", raw = FALSE)
+db_upsert_dbhydro_hydro(con, df)
 ```

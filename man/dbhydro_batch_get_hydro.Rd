@@ -4,7 +4,8 @@
 \alias{dbhydro_batch_get_hydro}
 \title{Get hydrologic data from DBHYDRO in batches}
 \usage{
-dbhydro_batch_get_hydro(dbkeys, date_min, date_max, batch_size = 5)
+dbhydro_batch_get_hydro(dbkeys, date_min, date_max, batch_size = 5,
+  raw = FALSE)
 }
 \arguments{
 \item{dbkeys}{character vector of DBKEY(s)}
@@ -14,6 +15,8 @@ dbhydro_batch_get_hydro(dbkeys, date_min, date_max, batch_size = 5)
 \item{date_max}{end date}
 
 \item{batch_size}{number of DBKEYs for each batch}
+
+\item{raw}{if TRUE, return raw results from DBHYDRO, otherwise pass results through \code{dbhydro_clean_hydro()} before returning (default)}
 }
 \value{
 tibble containing raw data, or empty tibble (no columns) if no data found

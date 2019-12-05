@@ -5,6 +5,7 @@
 #' @param dbkeys character vector of DBKEY(s)
 #' @param date_min start date
 #' @param date_max end date
+#' @param raw if TRUE, return raw results from DBHYDRO, otherwise pass results through \code{dbhydro_clean_hydro()} before returning (default)
 #'
 #' @return tibble containing raw data, or empty tibble (no columns) if no data found
 #' @export
@@ -14,7 +15,7 @@
 #' dbhydro_get_hydro(dbkeys = "91599", date_min = "2019-10-01", date_max = "2019-10-31")
 #' }
 #' @importFrom dplyr %>%
-dbhydro_get_hydro <- function (dbkeys, date_min, date_max) {
+dbhydro_get_hydro <- function (dbkeys, date_min, date_max, raw = FALSE) {
   logger::log_debug("fetching hydro data from dbhydro for {length(dbkeys)} dbkey(s) from {date_min} to {date_max}")
 
   df_raw <- tryCatch(
@@ -41,5 +42,10 @@ dbhydro_get_hydro <- function (dbkeys, date_min, date_max) {
     janitor::clean_names()
 
   logger::log_debug("received {nrow(df)} record(s) from dbhydro")
+
+  if (!raw) {
+    df <- dbhydro_clean_hydro(df)
+  }
+
   df
 }

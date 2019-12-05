@@ -7,6 +7,7 @@
 #' @param date_min start date
 #' @param date_max end date
 #' @param batch_size number of DBKEYs for each batch
+#' @param raw if TRUE, return raw results from DBHYDRO, otherwise pass results through \code{dbhydro_clean_hydro()} before returning (default)
 #'
 #' @return tibble containing raw data, or empty tibble (no columns) if no data found
 #' @export
@@ -20,7 +21,7 @@
 #'   batch_size = 2
 #' )
 #' }
-dbhydro_batch_get_hydro <- function (dbkeys, date_min, date_max, batch_size = 5) {
+dbhydro_batch_get_hydro <- function (dbkeys, date_min, date_max, batch_size = 5, raw = FALSE) {
   logger::log_info("fetching hydro data from dbhydro for {length(dbkeys)} dbkey(s) from {date_min} to {date_max} in batches of size {batch_size}")
 
   dbkey_batches <- base::split(dbkeys, base::ceiling(base::seq_along(dbkeys) / batch_size))
@@ -30,7 +31,8 @@ dbhydro_batch_get_hydro <- function (dbkeys, date_min, date_max, batch_size = 5)
     dbhydro_get_hydro(
       dbkeys = x,
       date_min = date_min,
-      date_max = date_max
+      date_max = date_max,
+      raw = raw
     )
   })
 

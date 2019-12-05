@@ -4,7 +4,7 @@
 \alias{dbhydro_get_hydro}
 \title{Get hydrologic data from DBHYDRO}
 \usage{
-dbhydro_get_hydro(dbkeys, date_min, date_max)
+dbhydro_get_hydro(dbkeys, date_min, date_max, raw = FALSE)
 }
 \arguments{
 \item{dbkeys}{character vector of DBKEY(s)}
@@ -12,6 +12,8 @@ dbhydro_get_hydro(dbkeys, date_min, date_max)
 \item{date_min}{start date}
 
 \item{date_max}{end date}
+
+\item{raw}{if TRUE, return raw results from DBHYDRO, otherwise pass results through \code{dbhydro_clean_hydro()} before returning (default)}
 }
 \value{
 tibble containing raw data, or empty tibble (no columns) if no data found

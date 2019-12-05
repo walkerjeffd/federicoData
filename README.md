@@ -175,3 +175,10 @@ insert/update those records in the database.
 df <- dbhydro_get_hydro(dbkeys = c("91473", "91599"), date_min = "2019-10-01", date_max = "2019-11-30", raw = FALSE)
 db_upsert_dbhydro_hydro(con, df)
 ```
+
+Use `db_get_dbhydro_hydro()` to fetch hydrologic data from the database.
+
+``` r
+db_get_dbhydro_hydro(con, dbkeys = c("91473", "91599")) # all data
+db_get_dbhydro_hydro(con, dbkeys = c("91473", "91599"), date_min = "2019-10-01", date_max = "2019-11-30") # specific date range
+```

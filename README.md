@@ -182,7 +182,8 @@ Use `db_get_dbhydro_hydro()` to fetch hydrologic data from the database.
 
 ``` r
 db_get_dbhydro_hydro(con, dbkeys = c("91473", "91599")) # all data
-db_get_dbhydro_hydro(con, dbkeys = c("91473", "91599"), date_min = "2019-10-01", date_max = "2019-11-30") # specific date range
+db_get_dbhydro_hydro(con, dbkeys = c("91473", "91599"), date_min = "2019-10-01") # all dates after date_min
+db_get_dbhydro_hydro(con, dbkeys = c("91473", "91599"), date_min = "2019-10-01", date_max = "2019-11-30") # all dates between date_min and date_max
 ```
 
 #### Water Quality Data
@@ -196,9 +197,11 @@ df <- dbhydro_get_wq(station_ids = c("LOX3", "LOX6"), date_min = "2019-01-01", d
 db_update_dbhydro_wq(con, df)
 ```
 
-Use `db_get_dbhydro_wq()` to fetch water quality data from the database.
+Use `db_get_dbhydro_wq()` to fetch water quality data from the
+database.
 
 ``` r
-db_get_dbhydro_wq(con, station_ids = c("LOX3", "LOX6")) # all data
-db_get_dbhydro_wq(con, station_ids = c("LOX3", "LOX6"), date_min = "2019-01-01", date_max = "2019-11-30") # specific date range
+db_get_dbhydro_wq(con, station_ids = c("LOX3", "LOX6")) # all dates and parameters
+db_get_dbhydro_wq(con, station_ids = c("LOX3", "LOX6"), date_min = "2019-01-01", date_max = "2019-11-30") # specific date range, all parameters
+db_get_dbhydro_wq(con, station_ids = c("LOX3", "LOX6"), wq_param = "TP") # specific parameter, all dates
 ```

@@ -1,8 +1,9 @@
-#' Add/update hydrologic data in database
+#' Update hydrologic data in database
 #'
-#' Fetches data from DBHYDRO for given list of dbkeys, then performs
-#' upsert operation to insert/update the results in the database.
-#' Existing records will be updated only if the revision date.
+#' Inserts and updates hydrologic data in the database. Performs
+#' an update on records that already exist in the database but
+#' have a outdated revision date. Inserts any new records that do
+#' not already exist in the database.
 #'
 #' @param con database connection object
 #' @param df data frame containing hydrologic records to insert/update.
@@ -19,11 +20,11 @@
 #'   date_min = "2019-10-01",
 #'   date_max = "2019-11-30"
 #' )
-#' db_upsert_dbhydro_hydro(con, df)
+#' db_update_dbhydro_hydro(con, df)
 #' }
-db_upsert_dbhydro_hydro <- function (con, df) {
+db_update_dbhydro_hydro <- function (con, df) {
   if (nrow(df) == 0) {
-    logger::log_info("no data to upsert, doing nothing")
+    logger::log_info("no data to update, doing nothing")
     return(TRUE)
   }
   if (any(is.na(df$dbkey))) {
@@ -36,7 +37,7 @@ db_upsert_dbhydro_hydro <- function (con, df) {
   }
 
   dbkeys <- unique(df$dbkey)
-  logger::log_info("upserting {nrow(df)} hydrologic records ({length(dbkeys)} unique dbkeys)")
+  logger::log_info("updating {nrow(df)} hydrologic records ({length(dbkeys)} unique dbkeys)")
 
   # fetch existing dbkeys
   db_dbkeys <- db_get_dbhydro_dbkeys(con, dbkeys = dbkeys)
@@ -81,7 +82,7 @@ db_upsert_dbhydro_hydro <- function (con, df) {
   if (nrow(df_update) == 0) {
     logger::log_info("no existing records need to be updated")
   } else {
-    logger::log_info("updating {nrow(df_update)} record(s) of {nrow(df)} total")
+    logger::log_info("updating {nrow(df_update)} existing record(s) of {nrow(df)} total")
     logger::log_debug("deleting {nrow(df_update)} record(s)")
     n_deleted <- DBI::dbExecute(con, glue::glue_sql("DELETE FROM dbhydro_hydro WHERE id IN ({ids*})", ids = df_update$id))
 

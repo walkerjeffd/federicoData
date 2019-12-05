@@ -167,13 +167,15 @@ db_get_dbhydro_dbkeys(con, dbkeys = c("91473", "91599"), include_stations = TRUE
 
 #### Hydrologic Data
 
-After fetching data from DBHYDRO, use `db_upsert_dbhydro_hydro()` to
-insert/update those records in the database.
+After fetching data from DBHYDRO, use `db_update_dbhydro_hydro()` to
+update those records in the database. This function will update records
+that already exist but have a new revision date, and add any records
+that do not already exist.
 
 ``` r
 # first fetch the data (must be in 'cleaned' form)
 df <- dbhydro_get_hydro(dbkeys = c("91473", "91599"), date_min = "2019-10-01", date_max = "2019-11-30", raw = FALSE)
-db_upsert_dbhydro_hydro(con, df)
+db_update_dbhydro_hydro(con, df)
 ```
 
 Use `db_get_dbhydro_hydro()` to fetch hydrologic data from the database.
@@ -181,4 +183,22 @@ Use `db_get_dbhydro_hydro()` to fetch hydrologic data from the database.
 ``` r
 db_get_dbhydro_hydro(con, dbkeys = c("91473", "91599")) # all data
 db_get_dbhydro_hydro(con, dbkeys = c("91473", "91599"), date_min = "2019-10-01", date_max = "2019-11-30") # specific date range
+```
+
+#### Water Quality Data
+
+After fetching data from DBHYDRO, use `db_upsert_dbhydro_wq()` to
+insert/update those records in the database.
+
+``` r
+# first fetch the data (must be in 'cleaned' form)
+df <- dbhydro_get_wq(station_ids = c("LOX3", "LOX6"), date_min = "2019-01-01", date_max = "2019-11-30")
+db_upsert_dbhydro_wq(con, df)
+```
+
+Use `db_get_dbhydro_wq()` to fetch water quality data from the database.
+
+``` r
+db_get_dbhydro_wq(con, station_ids = c("LOX3", "LOX6")) # all data
+db_get_dbhydro_wq(con, station_ids = c("LOX3", "LOX6"), date_min = "2019-01-01", date_max = "2019-11-30") # specific date range
 ```

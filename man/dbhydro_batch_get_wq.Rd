@@ -5,7 +5,7 @@
 \title{Get water quality data from DBHYDRO in batches}
 \usage{
 dbhydro_batch_get_wq(station_ids, date_min, date_max,
-  test_name = "PHOSPHATE, TOTAL AS P", batch_size = 5)
+  test_name = "PHOSPHATE, TOTAL AS P", batch_size = 5, raw = FALSE)
 }
 \arguments{
 \item{station_ids}{character vector containing one or more station_id's}
@@ -17,6 +17,8 @@ dbhydro_batch_get_wq(station_ids, date_min, date_max,
 \item{test_name}{test name}
 
 \item{batch_size}{number of stations for each batch}
+
+\item{raw}{if TRUE, return raw results from DBHYDRO, otherwise pass results through \code{dbhydro_clean_wq()} before returning (default)}
 }
 \value{
 tibble containing raw data, or empty tibble (no columns) if no data found

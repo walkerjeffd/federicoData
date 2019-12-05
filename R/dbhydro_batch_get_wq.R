@@ -8,6 +8,7 @@
 #' @param date_max end date
 #' @param test_name test name
 #' @param batch_size number of stations for each batch
+#' @param raw if TRUE, return raw results from DBHYDRO, otherwise pass results through \code{dbhydro_clean_wq()} before returning (default)
 #'
 #' @return tibble containing raw data, or empty tibble (no columns) if no data found
 #' @export
@@ -22,7 +23,7 @@
 #'   batch_size = 2
 #' )
 #' }
-dbhydro_batch_get_wq <- function (station_ids, date_min, date_max, test_name = "PHOSPHATE, TOTAL AS P", batch_size = 5) {
+dbhydro_batch_get_wq <- function (station_ids, date_min, date_max, test_name = "PHOSPHATE, TOTAL AS P", batch_size = 5, raw = FALSE) {
   logger::log_info("fetching wq data from dbhydro for {length(station_ids)} station(s) from {date_min} to {date_max} for test {test_name} in batches of size {batch_size}")
 
   station_batches <- base::split(station_ids, base::ceiling(base::seq_along(station_ids) / batch_size))
@@ -33,7 +34,8 @@ dbhydro_batch_get_wq <- function (station_ids, date_min, date_max, test_name = "
       station_ids = x,
       date_min = date_min,
       date_max = date_max,
-      test_name = test_name
+      test_name = test_name,
+      raw = raw
     )
   })
 

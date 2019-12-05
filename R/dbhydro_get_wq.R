@@ -6,6 +6,7 @@
 #' @param date_min start date
 #' @param date_max end date
 #' @param test_name test name
+#' @param raw if TRUE, return raw results from DBHYDRO, otherwise pass results through \code{dbhydro_clean_wq()} before returning (default)
 #'
 #' @return tibble containing raw data, or empty tibble (no columns) if no data found
 #' @export
@@ -19,7 +20,7 @@
 #'   test_name = "PHOSPHATE, TOTAL AS P"
 #' )
 #' }
-dbhydro_get_wq <- function (station_ids, date_min, date_max, test_name = "PHOSPHATE, TOTAL AS P") {
+dbhydro_get_wq <- function (station_ids, date_min, date_max, test_name = "PHOSPHATE, TOTAL AS P", raw = FALSE) {
   logger::log_debug("fetching wq data from dbhydro for {length(station_ids)} station(s) from {date_min} to {date_max} for test {test_name}")
 
   df_raw <- tryCatch(
@@ -40,5 +41,10 @@ dbhydro_get_wq <- function (station_ids, date_min, date_max, test_name = "PHOSPH
     janitor::clean_names()
 
   logger::log_debug("received {nrow(df)} record(s) from dbhydro")
+
+  if (!raw && nrow(df) > 0) {
+    df <- dbhydro_clean_wq(df)
+  }
+
   df
 }

@@ -5,7 +5,7 @@
 \title{Get water quality data from DBHYDRO}
 \usage{
 dbhydro_get_wq(station_ids, date_min, date_max,
-  test_name = "PHOSPHATE, TOTAL AS P")
+  test_name = "PHOSPHATE, TOTAL AS P", raw = FALSE)
 }
 \arguments{
 \item{station_ids}{character vector containing one or more station_id's}
@@ -15,6 +15,8 @@ dbhydro_get_wq(station_ids, date_min, date_max,
 \item{date_max}{end date}
 
 \item{test_name}{test name}
+
+\item{raw}{if TRUE, return raw results from DBHYDRO, otherwise pass results through \code{dbhydro_clean_wq()} before returning (default)}
 }
 \value{
 tibble containing raw data, or empty tibble (no columns) if no data found

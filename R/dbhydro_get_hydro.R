@@ -43,7 +43,7 @@ dbhydro_get_hydro <- function (dbkeys, date_min, date_max, raw = FALSE) {
 
   logger::log_debug("received {nrow(df)} record(s) from dbhydro")
 
-  if (!raw) {
+  if (!raw && nrow(df) > 0) {
     df <- dbhydro_clean_hydro(df)
   }
 

@@ -15,14 +15,14 @@
 #' }
 #' @importFrom dplyr %>%
 dbhydro_get_dbkey_metadata <- function (dbkeys, query = list(), batch_size = 100) {
-  logger::log_info("fetching metadata from dbhydro for {length(dbkeys)} dbkey(s)")
+  logger::log_info("fetching metadata for {length(dbkeys)} dbkey(s)")
 
   stopifnot(all(!is.na(dbkeys)))
   stopifnot(all(!duplicated(dbkeys)))
 
   batch_dbkeys <- dbkeys[1:min(length(dbkeys), batch_size)]
 
-  logger::log_debug("dbhydro_get_dbkey_metadata: fetching {length(batch_dbkeys)} dbkeys of {length(dbkeys)} total)")
+  logger::log_debug("fetching metadata for {length(batch_dbkeys)} dbkeys of {length(dbkeys)} total")
 
   fetch_query <- c(query, list(v_dbkey = stringr::str_c(batch_dbkeys, collapse = "/")))
   response <- httr::GET(

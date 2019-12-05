@@ -124,9 +124,9 @@ con <- db_connect(host = "localhost", dbname = "faadb", user = "me", password = 
 db_disconnect(con)
 ```
 
-### Adding DBHYDRO Data
+### Adding Data
 
-#### Stations
+#### DBHYDRO Stations
 
 Use `db_add_dbhydro_stations()` to add new DBHYDRO stations to the
 database.
@@ -139,4 +139,20 @@ new stations were successfully added, otherwise it returns `FALSE`.
 
 ``` r
 db_add_dbhydro_stations(con, station_ids = c("LOX3", "LOX6"))
+```
+
+#### DBHYDRO DBKEYs
+
+Use `db_add_dbhydro_dbkeys()` to add new DBHYDRO DBKEYs to the database.
+
+This function will fetch the DBKEY metadata from DBHYDRO, and will only
+succeed if the metadata for all specified DBKEYs is received. It will
+also only add metadata for DBKEYs that do not already exist in the
+database (i.e., new DBKEYs). The function returns `TRUE` if all new
+DBKEYs were successfully added, otherwise it returns `FALSE`. It also
+adds any stations corresponding to the new DBKEYs, which don’t already
+exist in the database.
+
+``` r
+db_add_dbhydro_dbkeys(con, c("91346", "91347"))
 ```

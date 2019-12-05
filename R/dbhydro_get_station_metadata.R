@@ -14,7 +14,7 @@
 #' dbhydro_get_station_metadata(station_ids = c("L3", "G136", "G342A", "G342B", "G342C", "G342D"))
 #' }
 dbhydro_get_station_metadata <- function (station_ids, query = list(), batch_size = 10) {
-  logger::log_info("fetching metadata from dbhydro for {length(station_ids)} station(s)")
+  logger::log_info("fetching metadata for {length(station_ids)} station(s)")
 
   if (any(is.na(station_ids))) {
     logger::log_error("station_ids cannot contain NAs, stopping")
@@ -36,7 +36,7 @@ dbhydro_get_station_metadata <- function (station_ids, query = list(), batch_siz
   # first only first 100 (dbhydro limit)
   batch_station_ids <- station_ids[1:min(length(station_ids), batch_size)]
 
-  logger::log_debug("fetching {length(batch_station_ids)} stations of {length(station_ids)} total")
+  logger::log_debug("fetching metadata for {length(batch_station_ids)} stations of {length(station_ids)} total")
 
   fetch_query <- c(query, list(v_station = stringr::str_c(batch_station_ids, collapse = "/")))
   response <- httr::GET(

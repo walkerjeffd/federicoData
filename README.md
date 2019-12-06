@@ -256,3 +256,36 @@ df <- df_xlsx %>%
 
 db_update_usace_wq(con, df)
 ```
+
+## Trackers
+
+### Add New Tracker
+
+``` r
+df_tracker_hydro <- tibble::tibble(
+  dbkey = c("91473", "91599"),
+  date_min = "2019-10-01",
+  date_max = NA_character_
+)
+df_tracker_wq <- tibble::tibble(
+  station_id = c("LOX3", "LOX6"),
+  wq_param = "TP",
+  date_min = "2019-01-01",
+  date_max = NA_character_
+)
+
+tracker_add(
+  con,
+  id = "test-tracker",
+  description = "A tracker for testing",
+  hydro = df_tracker_hydro,
+  wq = df_tracker_wq,
+  replace = TRUE
+)
+```
+
+### Remove Tracker
+
+``` r
+tracker_remove(con, id = "test-tracker")
+```

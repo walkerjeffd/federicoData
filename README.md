@@ -26,6 +26,16 @@ Then load the package
 library(faahydro)
 ```
 
+## Logging
+
+This package uses the [`logger`
+package](https://github.com/daroczig/logger) for logging. Set the log
+threshold by:
+
+``` r
+logger::log_threshold(logger::DEBUG, namespace = "faahydro")
+```
+
 ## DBHYDRO Data
 
 ### Fetching Data
@@ -109,6 +119,7 @@ Then install the schema for each set of tables.
 
 ``` sh
 psql -d faadb -f inst/sql/schema-dbhydro.sql
+psql -d faadb -f inst/sql/schema-usace.sql
 ```
 
 ### Connecting
@@ -126,7 +137,7 @@ db_disconnect(con)
 
 ### Manage DBHYDRO Data
 
-#### Add Stations
+#### Stations
 
 Use `db_add_dbhydro_stations()` to add new DBHYDRO stations to the
 database.
@@ -139,6 +150,12 @@ new stations were successfully added, otherwise it returns `FALSE`.
 
 ``` r
 db_add_dbhydro_stations(con, station_ids = c("LOX3", "LOX6"))
+```
+
+Use `db_get_dbhydro_stations()` to get stations from the database.
+
+``` r
+db_get_dbhydro_stations(con)
 ```
 
 #### DBKEYs
@@ -204,4 +221,38 @@ database.
 db_get_dbhydro_wq(con, station_ids = c("LOX3", "LOX6")) # all dates and parameters
 db_get_dbhydro_wq(con, station_ids = c("LOX3", "LOX6"), date_min = "2019-01-01", date_max = "2019-11-30") # specific date range, all parameters
 db_get_dbhydro_wq(con, station_ids = c("LOX3", "LOX6"), wq_param = "TP") # specific parameter, all dates
+```
+
+#### USACE Preliminary Water Quality Data
+
+Use `db_update_usace_wq()` to load a new version of the USACE
+Preliminary WQ
+dataset.
+
+``` r
+df_xlsx <- readxl::read_xlsx("~/Dropbox/Work/federico/fscl/srs-tracker/prelim data/Preliminary WQ Data LIMS WCA3A and South_20191104.xlsx")
+df <- df_xlsx %>% 
+  janitor::clean_names() %>% 
+  dplyr::rename(
+    station_id = station,
+    collection_date = collect_date,
+    sample_type_new = sample_type,
+    collection_method = collect_method,
+    sample_comments = samp_comment,
+    result_comments = result_comment
+  ) %>% 
+  dplyr::select(-report_date) %>% 
+  dplyr::mutate(
+    test_name = "PHOSPHATE, TOTAL AS P",
+    collection_date = lubridate::force_tz(collection_date, tzone = "US/Eastern"),
+    date = lubridate::as_date(collection_date),
+    first_trigger_date = lubridate::mdy_hms(first_trigger_date, tz = "US/Eastern", quiet = TRUE)
+  ) %>% 
+  dplyr::mutate(
+    collection_date = format(lubridate::with_tz(collection_date, tzone = "UTC"), "%Y-%m-%d %H:%M:%SZ"),
+    date = as.character(date),
+    first_trigger_date = format(lubridate::with_tz(first_trigger_date, tzone = "UTC"), "%Y-%m-%d %H:%M:%SZ")
+  )
+
+db_update_usace_wq(con, df)
 ```

@@ -1,0 +1,28 @@
+DROP TABLE IF EXISTS usace_wq;
+CREATE TABLE usace_wq (
+  station_id TEXT,
+  wq_param TEXT,
+  date DATE,
+  value REAL,
+  units TEXT,
+  flag TEXT,
+  sample_type_new TEXT,
+  collection_method TEXT,
+  sample_id TEXT,
+  matrix TEXT,
+  project_code TEXT,
+  collection_date TIMESTAMPTZ,
+  discharge BOOLEAN,
+  up_down_stream TEXT,
+  weather TEXT,
+  depth TEXT,
+  first_trigger_date TIMESTAMPTZ,
+  storet_code TEXT,
+  test_name TEXT,
+  test_number REAL,
+  remark_code TEXT,
+  method TEXT,
+  mdl REAL,
+  sample_comments TEXT,
+  result_comments TEXT
+);

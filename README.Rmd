@@ -40,6 +40,14 @@ Then load the package
 library(faahydro)
 ```
 
+## Logging
+
+This package uses the [`logger` package](https://github.com/daroczig/logger) for logging. Set the log threshold by:
+
+```{r log-threshold, eval=FALSE}
+logger::log_threshold(logger::DEBUG, namespace = "faahydro")
+```
+
 ## DBHYDRO Data
 
 ### Fetching Data
@@ -80,6 +88,7 @@ dbhydro_batch_get_wq(
 )
 ```
 
+
 ### Cleaning Data
 
 The `dbhydro_clean_*()` functions can be used to clean the DBHYDRO datasets. This must be done before these datasets can be inserted into the database.
@@ -101,6 +110,7 @@ db_wq_raw <- dbhydro_get_wq(
 df_wq <- dbhydro_clean_wq(df_wq_raw)
 ```
 
+
 ## Database
 
 SQL scripts to create the database can be found in the `inst/sql` folder.
@@ -117,7 +127,9 @@ Then install the schema for each set of tables.
 
 ``` sh
 psql -d faadb -f inst/sql/schema-dbhydro.sql
+psql -d faadb -f inst/sql/schema-usace.sql
 ```
+
 
 ### Connecting
 
@@ -128,9 +140,10 @@ con <- db_connect(host = "localhost", dbname = "faadb", user = "me", password = 
 db_disconnect(con)
 ```
 
+
 ### Manage DBHYDRO Data
 
-#### Add Stations
+#### Stations
 
 Use `db_add_dbhydro_stations()` to add new DBHYDRO stations to the database.
 
@@ -138,6 +151,12 @@ This function will fetch the station metadata from DBHYDRO, and will only succee
 
 ```{r db-add-dbhydro-stations, eval=FALSE}
 db_add_dbhydro_stations(con, station_ids = c("LOX3", "LOX6"))
+```
+
+Use `db_get_dbhydro_stations()` to get stations from the database.
+
+```{r db-get-dbhydro-stations, eval=FALSE}
+db_get_dbhydro_stations(con)
 ```
 
 #### DBKEYs
@@ -193,3 +212,36 @@ db_get_dbhydro_wq(con, station_ids = c("LOX3", "LOX6")) # all dates and paramete
 db_get_dbhydro_wq(con, station_ids = c("LOX3", "LOX6"), date_min = "2019-01-01", date_max = "2019-11-30") # specific date range, all parameters
 db_get_dbhydro_wq(con, station_ids = c("LOX3", "LOX6"), wq_param = "TP") # specific parameter, all dates
 ```
+
+#### USACE Preliminary Water Quality Data
+
+Use `db_update_usace_wq()` to load a new version of the USACE Preliminary WQ dataset.
+
+```{r db-update-usace-wq, eval=FALSE}
+df_xlsx <- readxl::read_xlsx("~/Dropbox/Work/federico/fscl/srs-tracker/prelim data/Preliminary WQ Data LIMS WCA3A and South_20191104.xlsx")
+df <- df_xlsx %>% 
+  janitor::clean_names() %>% 
+  dplyr::rename(
+    station_id = station,
+    collection_date = collect_date,
+    sample_type_new = sample_type,
+    collection_method = collect_method,
+    sample_comments = samp_comment,
+    result_comments = result_comment
+  ) %>% 
+  dplyr::select(-report_date) %>% 
+  dplyr::mutate(
+    test_name = "PHOSPHATE, TOTAL AS P",
+    collection_date = lubridate::force_tz(collection_date, tzone = "US/Eastern"),
+    date = lubridate::as_date(collection_date),
+    first_trigger_date = lubridate::mdy_hms(first_trigger_date, tz = "US/Eastern", quiet = TRUE)
+  ) %>% 
+  dplyr::mutate(
+    collection_date = format(lubridate::with_tz(collection_date, tzone = "UTC"), "%Y-%m-%d %H:%M:%SZ"),
+    date = as.character(date),
+    first_trigger_date = format(lubridate::with_tz(first_trigger_date, tzone = "UTC"), "%Y-%m-%d %H:%M:%SZ")
+  )
+
+db_update_usace_wq(con, df)
+```
+

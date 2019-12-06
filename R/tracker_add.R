@@ -19,7 +19,7 @@ tracker_add <- function(con, id, description, hydro = NULL, wq = NULL, replace =
 
   if (replace) {
     logger::log_debug("removing existing tracker (if exists)")
-    tracker_remove(id)
+    tracker_remove(con, id)
   }
 
   if (!is.null(hydro)) {

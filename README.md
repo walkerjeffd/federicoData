@@ -289,3 +289,15 @@ tracker_add(
 ``` r
 tracker_remove(con, id = "test-tracker")
 ```
+
+### Get Trackers
+
+Use `tracker_get()` to retrieve a tracker from the database. This
+function returns a tibble with columns `id`, `description`, `hydro`, and
+`wq`. The `hydro` and `wq` columns are lists containing tibbles with the
+dbkeys and wq stations for each tracker.
+
+``` r
+tracker_get(con) # get all trackers
+tracker_get(con, ids = c("tracker-1", "tracker-2")) # get specific trackers
+```

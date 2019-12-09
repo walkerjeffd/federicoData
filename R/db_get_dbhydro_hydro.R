@@ -23,7 +23,7 @@ db_get_dbhydro_hydro <- function(con, dbkeys, date_min = NULL, date_max = NULL) 
     logger::log_error("dbkeys cannot contain NA values")
   }
 
-  logger::log_info("fetching dbhydro hydrologic data for {length(dbkeys)} dbkeys ({date_min} to {date_max}) from database")
+  logger::log_info("fetching dbhydro hydrologic data for {length(dbkeys)} dbkeys ({ifelse(is.null(date_min), 'N/A', date_min)} to {ifelse(is.null(date_max), 'N/A', date_max)}) from database")
 
   sql_where <- ""
   if (!is.null(date_min) || !is.null(date_max)) {
@@ -44,7 +44,7 @@ db_get_dbhydro_hydro <- function(con, dbkeys, date_min = NULL, date_max = NULL) 
   df <- DBI::dbGetQuery(
     con,
     glue::glue(
-      "SELECT * FROM dbhydro_hydro {sql_where}",
+      "SELECT * FROM dbhydro_hydro {sql_where} ORDER BY dbkey, date",
       .con = con
     )
   )

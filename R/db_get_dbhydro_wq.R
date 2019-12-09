@@ -25,7 +25,7 @@ db_get_dbhydro_wq <- function(con, station_ids, wq_params = NULL, date_min = NUL
     logger::log_error("station_ids cannot contain NA values")
   }
 
-  logger::log_info("fetching dbhydro wq data for {length(station_ids)} stations ({date_min} to {date_max}) for params {paste0(wq_params, collapse = ', ')} from database")
+  logger::log_info("fetching dbhydro wq data for {length(station_ids)} stations ({ifelse(is.null(date_min), 'N/A', date_min)} to {ifelse(is.null(date_max), 'N/A', date_max)}) for params {ifelse(is.null(wq_params), 'ALL', paste0(wq_params, collapse = ', '))} from database")
 
   sql_where_date <- NULL
   if (!is.null(date_min) || !is.null(date_max)) {
@@ -62,7 +62,7 @@ db_get_dbhydro_wq <- function(con, station_ids, wq_params = NULL, date_min = NUL
   df <- DBI::dbGetQuery(
     con,
     glue::glue(
-      "SELECT * FROM dbhydro_wq {sql_where}",
+      "SELECT * FROM dbhydro_wq {sql_where} ORDER BY station_id, date",
       .con = con
     )
   )

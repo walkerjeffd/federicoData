@@ -47,6 +47,10 @@ dbhydro_get_dbkey_metadata <- function (dbkeys, query = list(), batch_size = 100
       longitude = -dms_to_ddeg(.data$longitude)
     )
 
+  if (is.integer(df$dbkey)) {
+    df$dbkey <- sprintf("%05d", df$dbkey)
+  }
+
   if (length(dbkeys) <= batch_size) {
     return(df)
   }

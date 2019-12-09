@@ -48,6 +48,8 @@ dbhydro_get_dbkey_metadata <- function (dbkeys, query = list(), batch_size = 100
     )
 
   if (is.integer(df$dbkey)) {
+    # if dbkeys contained only numeric dbkeys, then rvest::html_table() might coerce the dbkey column to type integer
+    # which could remove padding zeros. So need to convert to character here.
     df$dbkey <- sprintf("%05d", df$dbkey)
   }
 

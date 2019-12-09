@@ -25,7 +25,9 @@ db_get_dbhydro_hydro <- function(con, dbkeys, date_min = NULL, date_max = NULL) 
 
   logger::log_info("fetching dbhydro hydrologic data for {length(dbkeys)} dbkeys ({ifelse(is.null(date_min), 'N/A', date_min)} to {ifelse(is.null(date_max), 'N/A', date_max)}) from database")
 
-  sql_where <- ""
+  sql_where_dbkey <- glue::glue_sql("dbhydro_hydro.dbkey IN ({dbkeys*})", .con = con)
+
+  sql_where_date <- ""
   if (!is.null(date_min) || !is.null(date_max)) {
     sql_date <- c()
     if (!is.null(date_min)) {
@@ -35,11 +37,13 @@ db_get_dbhydro_hydro <- function(con, dbkeys, date_min = NULL, date_max = NULL) 
       sql_date <- c(sql_date, glue::glue_sql("date <= {date_max}", .con = con))
     }
     if (length(sql_date) == 1) {
-      sql_where <- glue::glue("WHERE {sql_date}")
+      sql_where_date <- glue::glue("AND {sql_date}")
     } else {
-      sql_where <- glue::glue("WHERE {sql_date[1]} AND {sql_date[2]}")
+      sql_where_date <- glue::glue("AND {sql_date[1]} AND {sql_date[2]}")
     }
   }
+
+  sql_where <- glue::glue("WHERE {sql_where_dbkey} {sql_where_date}")
 
   df <- DBI::dbGetQuery(
     con,

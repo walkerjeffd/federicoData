@@ -27,6 +27,8 @@ db_get_dbhydro_wq <- function(con, station_ids, wq_params = NULL, date_min = NUL
 
   logger::log_info("fetching dbhydro wq data for {length(station_ids)} stations ({ifelse(is.null(date_min), 'N/A', date_min)} to {ifelse(is.null(date_max), 'N/A', date_max)}) for params {ifelse(is.null(wq_params), 'ALL', paste0(wq_params, collapse = ', '))} from database")
 
+  sql_where_station <- glue::glue_sql("station_id IN ({station_ids*})", .con = con)
+
   sql_where_date <- NULL
   if (!is.null(date_min) || !is.null(date_max)) {
     sql_date <- c()
@@ -48,17 +50,17 @@ db_get_dbhydro_wq <- function(con, station_ids, wq_params = NULL, date_min = NUL
     sql_where_param <- glue::glue_sql("wq_param IN ({wq_params*})", .con = con)
   }
 
-  sql_where <- ""
+  sql_where <- sql_where_station
   if (!is.null(sql_where_date) || !is.null(sql_where_param)) {
-    sql_where <- c()
     if (!is.null(sql_where_date)) {
-      sql_where <- c(sql_where_date)
+      sql_where <- c(sql_where, sql_where_date)
     }
     if (!is.null(sql_where_param)) {
       sql_where <- c(sql_where, sql_where_param)
     }
-    sql_where <- glue::glue("WHERE {paste0(sql_where, collapse = ' AND ')}")
   }
+  sql_where <- glue::glue("WHERE {paste0(sql_where, collapse = ' AND ')}")
+
   df <- DBI::dbGetQuery(
     con,
     glue::glue(

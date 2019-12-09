@@ -4,19 +4,19 @@
 \alias{db_get_dbhydro_wq}
 \title{Fetch DBHYDRO water quality data from database}
 \usage{
-db_get_dbhydro_wq(con, station_ids, date_min = NULL, date_max = NULL,
-  wq_params = NULL)
+db_get_dbhydro_wq(con, station_ids, wq_params = NULL, date_min = NULL,
+  date_max = NULL)
 }
 \arguments{
 \item{con}{database connection object}
 
 \item{station_ids}{character vector of dbkeys}
 
+\item{wq_params}{character vector of water quality parameters (optional)}
+
 \item{date_min}{start date (optional)}
 
 \item{date_max}{end date (optional)}
-
-\item{wq_params}{character vector of water quality parameters}
 }
 \value{
 tibble containing water quality data
@@ -29,7 +29,8 @@ Fetch DBHYDRO water quality data from database
 db_get_dbhydro_wq(con, station_ids = c("LOX3", "LOX6"))
 db_get_dbhydro_wq(
   con,
-  dbkeys = c("LOX3", "LOX6"),
+  station_ids = c("LOX3", "LOX6"),
+  wq_params = "TP",
   date_min = "2019-10-01",
   date_max = "2019-11-30"
 ) # specific date range

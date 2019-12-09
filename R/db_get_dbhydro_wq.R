@@ -2,9 +2,9 @@
 #'
 #' @param con database connection object
 #' @param station_ids character vector of dbkeys
+#' @param wq_params character vector of water quality parameters (optional)
 #' @param date_min start date (optional)
 #' @param date_max end date (optional)
-#' @param wq_params character vector of water quality parameters
 #'
 #' @return tibble containing water quality data
 #' @export
@@ -14,12 +14,13 @@
 #' db_get_dbhydro_wq(con, station_ids = c("LOX3", "LOX6"))
 #' db_get_dbhydro_wq(
 #'   con,
-#'   dbkeys = c("LOX3", "LOX6"),
+#'   station_ids = c("LOX3", "LOX6"),
+#'   wq_params = "TP",
 #'   date_min = "2019-10-01",
 #'   date_max = "2019-11-30"
 #' ) # specific date range
 #' }
-db_get_dbhydro_wq <- function(con, station_ids, date_min = NULL, date_max = NULL, wq_params = NULL) {
+db_get_dbhydro_wq <- function(con, station_ids, wq_params = NULL, date_min = NULL, date_max = NULL) {
   if (any(is.na(station_ids))) {
     logger::log_error("station_ids cannot contain NA values")
   }

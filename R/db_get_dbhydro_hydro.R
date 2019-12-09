@@ -44,7 +44,7 @@ db_get_dbhydro_hydro <- function(con, dbkeys, date_min = NULL, date_max = NULL) 
   df <- DBI::dbGetQuery(
     con,
     glue::glue(
-      "SELECT * FROM dbhydro_hydro {sql_where} ORDER BY dbkey, date",
+      "SELECT dbhydro_hydro.*, dbhydro_dbkeys.station_id FROM dbhydro_hydro LEFT JOIN dbhydro_dbkeys ON dbhydro_hydro.dbkey = dbhydro_dbkeys.dbkey {sql_where} ORDER BY dbkey, date",
       .con = con
     )
   )

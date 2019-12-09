@@ -4,17 +4,16 @@
 \alias{dbhydro_get_wq}
 \title{Get water quality data from DBHYDRO}
 \usage{
-dbhydro_get_wq(station_ids, date_min, date_max,
-  test_name = "PHOSPHATE, TOTAL AS P", raw = FALSE)
+dbhydro_get_wq(station_ids, wq_param, date_min, date_max, raw = FALSE)
 }
 \arguments{
 \item{station_ids}{character vector containing one or more station_id's}
 
+\item{wq_param}{water quality parameter (must be listed in \code{dbhydro_wq_params})}
+
 \item{date_min}{start date}
 
 \item{date_max}{end date}
-
-\item{test_name}{test name}
 
 \item{raw}{if TRUE, return raw results from DBHYDRO, otherwise pass results through \code{dbhydro_clean_wq()} before returning (default)}
 }
@@ -28,9 +27,9 @@ Get water quality data from DBHYDRO for specified station(s) and date range
 \dontrun{
 dbhydro_get_wq(
   station_ids = "LOX3",
+  wq_param = "TP",
   date_min = "2019-09-01",
-  date_max = "2019-10-31",
-  test_name = "PHOSPHATE, TOTAL AS P"
+  date_max = "2019-10-31"
 )
 }
 }

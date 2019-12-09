@@ -54,9 +54,9 @@ dbhydro_get_hydro(
 )
 dbhydro_get_wq(
   station_ids = "LOX3",
+  wq_param = "TP",
   date_min = "2019-09-01",
-  date_max = "2019-10-31",
-  test_name = "PHOSPHATE, TOTAL AS P"
+  date_max = "2019-10-31"
 )
 ```
 
@@ -72,9 +72,9 @@ dbhydro_batch_get_hydro(
 )
 dbhydro_batch_get_wq(
   station_ids = c("LOX3", "LOX4", "LOX5"),
+  wq_param = "TP",
   date_min = "2019-09-01",
   date_max = "2019-10-31",
-  test_name = "PHOSPHATE, TOTAL AS P",
   batch_size = 2
 )
 ```
@@ -95,9 +95,9 @@ df_hydro <- dbhydro_clean_hydro(df_hydro_raw)
 
 db_wq_raw <- dbhydro_get_wq(
   station_ids = c("LOX3", "LOX4", "LOX5"),
+  wq_param = "TP",
   date_min = "2019-09-01",
-  date_max = "2019-10-31",
-  test_name = "PHOSPHATE, TOTAL AS P"
+  date_max = "2019-10-31"
 )
 df_wq <- dbhydro_clean_wq(df_wq_raw)
 ```

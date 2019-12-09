@@ -4,17 +4,17 @@
 \alias{dbhydro_batch_get_wq}
 \title{Get water quality data from DBHYDRO in batches}
 \usage{
-dbhydro_batch_get_wq(station_ids, date_min, date_max,
-  test_name = "PHOSPHATE, TOTAL AS P", batch_size = 5, raw = FALSE)
+dbhydro_batch_get_wq(station_ids, wq_param, date_min, date_max,
+  batch_size = 5, raw = FALSE)
 }
 \arguments{
 \item{station_ids}{character vector containing one or more station_id's}
 
+\item{wq_param}{water quality parameter (must be listed in \code{dbhydro_wq_params})}
+
 \item{date_min}{start date}
 
 \item{date_max}{end date}
-
-\item{test_name}{test name}
 
 \item{batch_size}{number of stations for each batch}
 
@@ -31,9 +31,9 @@ in batches of specified size
 \dontrun{
 dbhydro_batch_get_wq(
   station_ids = c("LOX3", "LOX4", "LOX5"),
+  wq_param = "TP",
   date_min = "2019-09-01",
   date_max = "2019-10-31",
-  test_name = "PHOSPHATE, TOTAL AS P",
   batch_size = 2
 )
 }

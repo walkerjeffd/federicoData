@@ -29,12 +29,30 @@ tracker_get <- function (con, ids = NULL) {
     return(df_trackers)
   }
 
-  df_trackers_hydro <- DBI::dbGetQuery(con, glue::glue_sql("SELECT * FROM trackers_hydro WHERE tracker_id IN ({df_trackers$id})", .con = con)) %>%
-    tibble::as_tibble() %>%
+  df_trackers_hydro <- DBI::dbGetQuery(
+    con,
+    glue::glue_sql(
+      "SELECT *
+      FROM trackers_hydro
+      WHERE tracker_id IN ({df_trackers$id})",
+      .con = con
+    )
+  ) %>%
+    tibble::as_tibble()
+
+  df_dbkeys <- db_get_dbhydro_dbkeys(con = con, dbkeys = df_trackers_hydro$dbkey, include_stations = TRUE)
+
+  df_trackers_hydro <- df_trackers_hydro %>%
+    dplyr::left_join(df_dbkeys, by = "dbkey") %>%
     tidyr::nest(hydro = -c("tracker_id"))
 
   df_trackers_wq <- DBI::dbGetQuery(con, glue::glue_sql("SELECT * FROM trackers_wq WHERE tracker_id IN ({df_trackers$id})", .con = con)) %>%
-    tibble::as_tibble() %>%
+    tibble::as_tibble()
+
+  df_stations <- db_get_dbhydro_stations(con, station_ids = df_trackers_wq$station_id)
+
+  df_trackers_wq <- df_trackers_wq %>%
+    dplyr::left_join(df_stations, by = "station_id") %>%
     tidyr::nest(wq = -c("tracker_id"))
 
   df <- df_trackers %>%

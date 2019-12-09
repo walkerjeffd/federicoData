@@ -301,3 +301,18 @@ dbkeys and wq stations for each tracker.
 tracker_get(con) # get all trackers
 tracker_get(con, ids = c("tracker-1", "tracker-2")) # get specific trackers
 ```
+
+### Update Trackers
+
+Use `tracker_update()` to update the data associated with each tracker.
+This function in turn calls `tracker_update_hydro()` and
+`tracker_update_wq()` to update the hydrologic and wq datasets,
+respectively.
+
+``` r
+tracker_update(date_min = "2019-10-01", date_max = "2019-11-30") # update all trackers
+tracker_update(ids = c("tracker-1", "tracker-2"), date_min = "2019-10-01", date_max = "2019-11-30") # update specific trackers
+
+tracker_update_hydro(ids = "tracker-1", date_min = "2019-10-01", date_max = "2019-11-30") # update only hydrologic data
+tracker_update_wq(ids = "tracker-1", date_min = "2019-10-01", date_max = "2019-11-30") # update only wq data
+```

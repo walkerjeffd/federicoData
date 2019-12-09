@@ -14,7 +14,7 @@
 #' dbhydro_get_dbkey_metadata(dbkeys = c("KQ646", "HD889"))
 #' }
 #' @importFrom dplyr %>%
-dbhydro_get_dbkey_metadata <- function (dbkeys, query = list(), batch_size = 100) {
+dbhydro_get_dbkey_metadata <- function (dbkeys, query = list(), batch_size = 10) {
   logger::log_info("fetching metadata for {length(dbkeys)} dbkey(s)")
 
   stopifnot(all(!is.na(dbkeys)))

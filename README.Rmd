@@ -299,3 +299,12 @@ tracker_update(ids = c("tracker-1", "tracker-2"), date_min = "2019-10-01", date_
 tracker_update_hydro(ids = "tracker-1", date_min = "2019-10-01", date_max = "2019-11-30") # update only hydrologic data
 tracker_update_wq(ids = "tracker-1", date_min = "2019-10-01", date_max = "2019-11-30") # update only wq data
 ```
+
+### Tracker Data
+
+Use `tracker_data()` to fetch all data for a single tracker over a specified period.
+
+```{r tracker-data, eval=FALSE}
+tracker_data("tracker-1") # all data
+tracker_data("tracker-1", date_min = "2018-10-01", date_max = "2019-09-30") # specific period
+````

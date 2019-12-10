@@ -120,6 +120,7 @@ Then install the schema for each set of tables.
 ``` sh
 psql -d faadb -f inst/sql/schema-dbhydro.sql
 psql -d faadb -f inst/sql/schema-usace.sql
+psql -d faadb -f inst/sql/schema-tracker.sql
 ```
 
 ### Connecting

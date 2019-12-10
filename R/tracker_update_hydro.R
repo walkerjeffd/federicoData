@@ -19,17 +19,19 @@ tracker_update_hydro <- function (con, ids = NULL, date_min = NULL, date_max = N
 
   df_trackers <- tracker_get(con, ids = ids) %>%
     dplyr::select(-c("description", "wq")) %>%
-    tidyr::unnest(.data$hydro) %>%
-    dplyr::select(c("id", "dbkey", "date_min", "date_max")) %>%
-    dplyr::filter(!is.na(.data$dbkey)) %>%
-    dplyr::mutate(
-      date_max = dplyr::coalesce(.data$date_max, lubridate::today(tzone = "US/Eastern"))
-    )
+    tidyr::unnest(.data$hydro)
 
   if (nrow(df_trackers) == 0) {
     logger::log_warn("no dbkeys found for trackers, doing nothing")
     return(TRUE)
   }
+
+  df_trackers <- df_trackers %>%
+    dplyr::select(c("id", "dbkey", "date_min", "date_max")) %>%
+    dplyr::filter(!is.na(.data$dbkey)) %>%
+    dplyr::mutate(
+      date_max = dplyr::coalesce(.data$date_max, lubridate::today(tzone = "US/Eastern"))
+    )
 
   if (!is.null(date_min)) {
     logger::log_debug("setting start date ({date_min})")

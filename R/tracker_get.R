@@ -48,6 +48,9 @@ tracker_get <- function (con, ids = NULL) {
 
     df_trackers <- df_trackers %>%
       dplyr::left_join(df_trackers_hydro, by = c("id" = "tracker_id"))
+  } else {
+    df_trackers <- df_trackers %>%
+      dplyr::mutate(hydro = purrr::map(.data$id, ~ tibble::tibble()))
   }
 
   df_trackers_wq <- DBI::dbGetQuery(con, glue::glue_sql("SELECT * FROM trackers_wq WHERE tracker_id IN ({df_trackers$id})", .con = con)) %>%
@@ -60,6 +63,9 @@ tracker_get <- function (con, ids = NULL) {
       tidyr::nest(wq = -c("tracker_id"))
     df_trackers <- df_trackers %>%
       dplyr::left_join(df_trackers_wq, by = c("id" = "tracker_id"))
+  } else {
+    df_trackers <- df_trackers %>%
+      dplyr::mutate(wq = purrr::map(.data$id, ~ tibble::tibble()))
   }
 
   logger::log_debug("returning {nrow(df_trackers)} trackers")

@@ -34,6 +34,7 @@ dbhydro_batch_get_hydro <- function (dbkeys, date_min, date_max, batch_size = 5,
       date_max = date_max,
       raw = raw
     )
+    Sys.sleep(5)
   })
 
   logger::log_debug("received {nrow(df)} record(s) from dbhydro for all batches")

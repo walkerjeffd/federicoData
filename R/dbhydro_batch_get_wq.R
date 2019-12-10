@@ -37,6 +37,7 @@ dbhydro_batch_get_wq <- function (station_ids, wq_param, date_min, date_max, bat
       date_max = date_max,
       raw = raw
     )
+    Sys.sleep(5)
   })
 
   logger::log_debug("received {nrow(df)} record(s) from dbhydro for all batches")

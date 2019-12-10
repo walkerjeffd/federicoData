@@ -31,10 +31,10 @@ tracker_data <- function(con, id, date_min = NULL, date_max = NULL) {
   df_hydro <- NULL
   df_wq <- NULL
 
-  if (!is.null(tracker$hydro)) {
+  if (!is.null(tracker$hydro) && nrow(tracker$hydro) > 0) {
     df_hydro <- db_get_dbhydro_hydro(con, dbkeys = tracker$hydro$dbkey, date_min = date_min, date_max = date_max)
   }
-  if (!is.null(tracker$wq)) {
+  if (!is.null(tracker$wq) && nrow(tracker$wq) > 0) {
     df_wq <- db_get_dbhydro_wq(con, station_ids = tracker$wq$station_id, date_min = date_min, date_max = date_max)
   }
 

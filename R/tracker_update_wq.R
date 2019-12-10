@@ -20,6 +20,7 @@ tracker_update_wq <- function (con, ids = NULL, date_min = NULL, date_max = NULL
   df_trackers <- tracker_get(con, ids = ids) %>%
     dplyr::select(-c("description", "hydro")) %>%
     tidyr::unnest(.data$wq) %>%
+    dplyr::select(c("id", "station_id", "wq_param", "date_min", "date_max")) %>%
     dplyr::filter(!is.na(.data$station_id)) %>%
     dplyr::mutate(
       date_max = dplyr::coalesce(.data$date_max, lubridate::today(tzone = "US/Eastern"))

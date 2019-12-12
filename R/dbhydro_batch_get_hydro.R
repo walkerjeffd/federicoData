@@ -28,13 +28,14 @@ dbhydro_batch_get_hydro <- function (dbkeys, date_min, date_max, batch_size = 5,
   logger::log_debug("dbkeys split into {length(dbkey_batches)} batch(es)")
 
   df <- purrr::map_df(dbkey_batches, function(x) {
-    dbhydro_get_hydro(
+    y <- dbhydro_get_hydro(
       dbkeys = x,
       date_min = date_min,
       date_max = date_max,
       raw = raw
     )
     Sys.sleep(5)
+    y
   })
 
   logger::log_debug("received {nrow(df)} record(s) from dbhydro for all batches")

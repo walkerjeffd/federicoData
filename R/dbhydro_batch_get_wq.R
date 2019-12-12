@@ -30,7 +30,7 @@ dbhydro_batch_get_wq <- function (station_ids, wq_param, date_min, date_max, bat
   logger::log_debug("stations split into {length(station_batches)} batch(es)")
 
   df <- purrr::map_df(station_batches, function(x) {
-    dbhydro_get_wq(
+    y <- dbhydro_get_wq(
       station_ids = x,
       wq_param = wq_param,
       date_min = date_min,
@@ -38,6 +38,7 @@ dbhydro_batch_get_wq <- function (station_ids, wq_param, date_min, date_max, bat
       raw = raw
     )
     Sys.sleep(5)
+    y
   })
 
   logger::log_debug("received {nrow(df)} record(s) from dbhydro for all batches")

@@ -34,7 +34,7 @@ tracker_get <- function (con, ids = NULL) {
     glue::glue_sql(
       "SELECT *
       FROM trackers_hydro
-      WHERE tracker_id IN ({df_trackers$id})",
+      WHERE tracker_id IN ({df_trackers$id*})",
       .con = con
     )
   ) %>%
@@ -53,7 +53,7 @@ tracker_get <- function (con, ids = NULL) {
       dplyr::mutate(hydro = purrr::map(.data$id, ~ tibble::tibble()))
   }
 
-  df_trackers_wq <- DBI::dbGetQuery(con, glue::glue_sql("SELECT * FROM trackers_wq WHERE tracker_id IN ({df_trackers$id})", .con = con)) %>%
+  df_trackers_wq <- DBI::dbGetQuery(con, glue::glue_sql("SELECT * FROM trackers_wq WHERE tracker_id IN ({df_trackers$id*})", .con = con)) %>%
     tibble::as_tibble()
 
   if (nrow(df_trackers_wq) > 0) {

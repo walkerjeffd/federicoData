@@ -113,6 +113,13 @@ usgs_get_dv(
   date_min = "2018-01-01",
   date_max = "2018-02-01"
 )
+usgs_batch_get_dv(
+  station_ids = c("263180080205001", "263000080120001"),
+  param = "stage",
+  date_min = "2018-09-01",
+  date_max = "2018-10-31",
+  batch_size = 1
+)
 ```
 
 ## Database
@@ -297,6 +304,12 @@ df_tracker_dbhydro_wq <- tibble::tibble(
   date_min = "2019-01-01",
   date_max = NA_character_
 )
+df_tracker_usgs_dv <- tibble::tibble(
+  station_id = c("263180080205001", "263000080120001"),
+  param = "stage",
+  date_min = "2019-01-01",
+  date_max = NA_character_
+)
 
 tracker_add(
   con,
@@ -304,6 +317,7 @@ tracker_add(
   description = "A tracker for testing",
   dbhydro_hydro = df_tracker_dbhydro_hydro,
   dbhydro_wq = df_tracker_dbhydro_wq,
+  usgs_dv = df_tracker_usgs_dv,
   replace = TRUE
 )
 ```
@@ -338,8 +352,9 @@ respectively.
 tracker_update(con, date_min = "2019-10-01", date_max = "2019-11-30") # update all trackers
 tracker_update(con, ids = c("test-tracker"), date_min = "2019-10-01", date_max = "2019-11-30") # update specific trackers
 
-tracker_update_dbhydro_hydro(con, ids = "test-tracker", date_min = "2019-10-01", date_max = "2019-11-30") # update only hydrologic data
-tracker_update_dbhydro_wq(con, ids = "test-tracker", date_min = "2019-10-01", date_max = "2019-11-30") # update only wq data
+tracker_update_dbhydro_hydro(con, ids = "test-tracker", date_min = "2019-10-01", date_max = "2019-11-30") # update only dbhydro hydrologic data
+tracker_update_dbhydro_wq(con, ids = "test-tracker", date_min = "2019-10-01", date_max = "2019-11-30") # update only dbhydro wq data
+tracker_update_usgs_dv(con, ids = "test-tracker", date_min = "2019-10-01", date_max = "2019-11-30") # update only usgs dv data
 ```
 
 ### Tracker Data

@@ -27,6 +27,7 @@ usgs_clean_dv <- function (x) {
 
   y <- tibble::as_tibble(x)
   names(y) <- c("agency", "station_id", "date", "value", "flag")
+  y <- dplyr::select(y, -c("agency"))
 
   param_code <- attr(x, "variableInfo")$variableCode
   param <- usgs_params$param[which(usgs_params$param_code == param_code)]
@@ -38,7 +39,7 @@ usgs_clean_dv <- function (x) {
 
   y$param <- param
   y$param_code <- param_code
-  y$unit <- attr(x, "variableInfo")$unit
+  y$units <- attr(x, "variableInfo")$unit
   y$stat_code <- attr(x, "statisticInfo")$statisticCd
   y
 }

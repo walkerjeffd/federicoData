@@ -1,10 +1,10 @@
-#' Update hydrologic data for trackers
+#' Update DBHYDRO water quality data for trackers
 #'
 #' @param con database connection object
 #' @param ids character vector of tracker IDs, or NULL to update all trackers
 #' @param date_min start date for period to update, or NULL to use dbkey start date
 #' @param date_max end date for period to update, or NULL to use dbkey end date
-#' @param batch_size batch size passed to \code{dbhydro_batch_get_hydro()} (# dbkeys per batch)
+#' @param batch_size batch size passed to \code{dbhydro_batch_get_wq()} (# stations per batch)
 #'
 #' @return TRUE if operation was successful
 #' @export
@@ -12,23 +12,28 @@
 #'
 #' @examples
 #' \dontrun{
-#' tracker_update_hydro(con, ids = "test-tracker")
+#' tracker_update_dbhydro_wq(
+#'   con,
+#'   ids = "test-tracker",
+#'   date_min = "2019-01-01",
+#'   date_max = "2019-12-01"
+#' )
 #' }
-tracker_update_hydro <- function (con, ids = NULL, date_min = NULL, date_max = NULL, batch_size = 5) {
-  logger::log_info("updating hydrologic data for trackers ({ifelse(is.null(ids), 'ALL', paste0(ids, collapse = ', '))}) with period ({ifelse(is.null(date_min), 'N/A', date_min)}, {ifelse(is.null(date_max), 'N/A', date_max)})")
+tracker_update_dbhydro_wq <- function (con, ids = NULL, date_min = NULL, date_max = NULL, batch_size = 5) {
+  logger::log_info("updating dbhydro wq data for trackers ({ifelse(is.null(ids), 'ALL', paste0(ids, collapse = ', '))}) with period ({ifelse(is.null(date_min), 'N/A', date_min)}, {ifelse(is.null(date_max), 'N/A', date_max)})")
 
   df_trackers <- tracker_get(con, ids = ids) %>%
-    dplyr::select(-c("description", "wq")) %>%
-    tidyr::unnest(.data$hydro)
+    dplyr::select(c("id", "dbhydro_wq")) %>%
+    tidyr::unnest(.data$dbhydro_wq)
 
   if (nrow(df_trackers) == 0) {
-    logger::log_warn("no dbkeys found for trackers, doing nothing")
+    logger::log_warn("no dbhydro wq stations found for trackers, doing nothing")
     return(TRUE)
   }
 
   df_trackers <- df_trackers %>%
-    dplyr::select(c("id", "dbkey", "date_min", "date_max")) %>%
-    dplyr::filter(!is.na(.data$dbkey)) %>%
+    dplyr::select(c("id", "station_id", "wq_param", "date_min", "date_max")) %>%
+    dplyr::filter(!is.na(.data$station_id)) %>%
     dplyr::mutate(
       date_max = dplyr::coalesce(.data$date_max, lubridate::today(tzone = "US/Eastern"))
     )
@@ -55,34 +60,35 @@ tracker_update_hydro <- function (con, ids = NULL, date_min = NULL, date_max = N
 
   stopifnot(all(!is.na(df_trackers)))
 
-  df_dbkeys <- df_trackers %>%
-    dplyr::select(c("dbkey", "date_min", "date_max")) %>%
-    dplyr::group_by(.data$dbkey) %>%
+  df_stations <- df_trackers %>%
+    dplyr::select(c("station_id", "wq_param", "date_min", "date_max")) %>%
+    dplyr::group_by(.data$station_id, .data$wq_param) %>%
     dplyr::summarise(
       date_min = min(.data$date_min),
       date_max = min(.data$date_max)
     ) %>%
     dplyr::ungroup()
 
-  df_periods <- df_dbkeys %>%
-    tidyr::nest(dbkeys = -c("date_min", "date_max")) %>%
+  df_periods <- df_stations %>%
+    tidyr::nest(station_ids = -c("wq_param", "date_min", "date_max")) %>%
     dplyr::mutate(
-      dbkeys = purrr::flatten(.data$dbkeys)
+      station_ids = purrr::flatten(.data$station_ids)
     )
 
   df_fetch <- df_periods %>%
     dplyr::mutate(
       data = purrr::pmap(
-        list(.data$date_min, .data$date_max, .data$dbkeys),
-        function (date_min, date_max, dbkeys) {
-          dbhydro_batch_get_hydro(
-            dbkeys = dbkeys,
+        list(.data$station_ids, .data$wq_param, .data$date_min, .data$date_max),
+        function (station_ids, wq_param, date_min, date_max) {
+          dbhydro_batch_get_wq(
+            station_ids = station_ids,
+            wq_param = wq_param,
             date_min = date_min,
             date_max = date_max,
             batch_size = batch_size,
             raw = FALSE
           )
-      })
+        })
     )
 
   df_data <- df_fetch %>%
@@ -91,7 +97,7 @@ tracker_update_hydro <- function (con, ids = NULL, date_min = NULL, date_max = N
 
   logger::log_debug("received {nrow(df_data)} total records")
 
-  stopifnot(db_update_dbhydro_hydro(con, df_data))
+  stopifnot(db_update_dbhydro_wq(con, df_data))
 
   TRUE
 }

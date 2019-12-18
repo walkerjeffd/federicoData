@@ -5,7 +5,7 @@
 \title{Update hydrologic and water quality data for trackers}
 \usage{
 tracker_update(con, ids = NULL, date_min = NULL, date_max = NULL,
-  hydro_batch_size = 5, wq_batch_size = 5)
+  dbhydro_hydro_batch_size = 5, dbhydro_wq_batch_size = 5)
 }
 \arguments{
 \item{con}{database connection object}
@@ -16,9 +16,9 @@ tracker_update(con, ids = NULL, date_min = NULL, date_max = NULL,
 
 \item{date_max}{end date for period to update, or NULL to use dbkey end date}
 
-\item{hydro_batch_size}{batch size passed to \code{dbhydro_batch_get_hydro()} (# dbkeys per batch)}
+\item{dbhydro_hydro_batch_size}{batch size passed to \code{dbhydro_batch_get_hydro()} (# dbkeys per batch)}
 
-\item{wq_batch_size}{batch size passed to \code{dbhydro_batch_get_wq()} (# stations per batch)}
+\item{dbhydro_wq_batch_size}{batch size passed to \code{dbhydro_batch_get_wq()} (# stations per batch)}
 }
 \value{
 TRUE if operation was successful

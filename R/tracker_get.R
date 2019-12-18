@@ -29,43 +29,43 @@ tracker_get <- function (con, ids = NULL) {
     return(df_trackers)
   }
 
-  df_trackers_hydro <- DBI::dbGetQuery(
+  df_trackers_dbhydro_hydro <- DBI::dbGetQuery(
     con,
     glue::glue_sql(
       "SELECT *
-      FROM trackers_hydro
+      FROM trackers_dbhydro_hydro
       WHERE tracker_id IN ({df_trackers$id*})",
       .con = con
     )
   ) %>%
     tibble::as_tibble()
 
-  if (nrow(df_trackers_hydro) > 0) {
-    df_dbkeys <- db_get_dbhydro_dbkeys(con = con, dbkeys = df_trackers_hydro$dbkey, include_stations = TRUE)
-    df_trackers_hydro <- df_trackers_hydro %>%
-      dplyr::left_join(df_dbkeys, by = "dbkey") %>%
-      tidyr::nest(hydro = -c("tracker_id"))
+  if (nrow(df_trackers_dbhydro_hydro) > 0) {
+    df_dbhydro_dbkeys <- db_get_dbhydro_dbkeys(con = con, dbkeys = df_trackers_dbhydro_hydro$dbkey, include_stations = TRUE)
+    df_trackers_dbhydro_hydro <- df_trackers_dbhydro_hydro %>%
+      dplyr::left_join(df_dbhydro_dbkeys, by = "dbkey") %>%
+      tidyr::nest(dbhydro_hydro = -c("tracker_id"))
 
     df_trackers <- df_trackers %>%
-      dplyr::left_join(df_trackers_hydro, by = c("id" = "tracker_id"))
+      dplyr::left_join(df_trackers_dbhydro_hydro, by = c("id" = "tracker_id"))
   } else {
     df_trackers <- df_trackers %>%
-      dplyr::mutate(hydro = purrr::map(.data$id, ~ tibble::tibble()))
+      dplyr::mutate(dbhydro_hydro = purrr::map(.data$id, ~ tibble::tibble()))
   }
 
-  df_trackers_wq <- DBI::dbGetQuery(con, glue::glue_sql("SELECT * FROM trackers_wq WHERE tracker_id IN ({df_trackers$id*})", .con = con)) %>%
+  df_trackers_dbhydro_wq <- DBI::dbGetQuery(con, glue::glue_sql("SELECT * FROM trackers_dbhydro_wq WHERE tracker_id IN ({df_trackers$id*})", .con = con)) %>%
     tibble::as_tibble()
 
-  if (nrow(df_trackers_wq) > 0) {
-    df_stations <- db_get_dbhydro_stations(con, station_ids = df_trackers_wq$station_id)
-    df_trackers_wq <- df_trackers_wq %>%
-      dplyr::left_join(df_stations, by = "station_id") %>%
-      tidyr::nest(wq = -c("tracker_id"))
+  if (nrow(df_trackers_dbhydro_wq) > 0) {
+    df_dbhydro_stations <- db_get_dbhydro_stations(con, station_ids = df_trackers_dbhydro_wq$station_id)
+    df_trackers_dbhydro_wq <- df_trackers_dbhydro_wq %>%
+      dplyr::left_join(df_dbhydro_stations, by = "station_id") %>%
+      tidyr::nest(dbhydro_wq = -c("tracker_id"))
     df_trackers <- df_trackers %>%
-      dplyr::left_join(df_trackers_wq, by = c("id" = "tracker_id"))
+      dplyr::left_join(df_trackers_dbhydro_wq, by = c("id" = "tracker_id"))
   } else {
     df_trackers <- df_trackers %>%
-      dplyr::mutate(wq = purrr::map(.data$id, ~ tibble::tibble()))
+      dplyr::mutate(dbhydro_wq = purrr::map(.data$id, ~ tibble::tibble()))
   }
 
   logger::log_debug("returning {nrow(df_trackers)} trackers")

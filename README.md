@@ -277,12 +277,12 @@ db_update_usace_wq(con, df)
 ### Add New Tracker
 
 ``` r
-df_tracker_hydro <- tibble::tibble(
+df_tracker_dbhydro_hydro <- tibble::tibble(
   dbkey = c("91473", "91599"),
   date_min = "2019-10-01",
   date_max = NA_character_
 )
-df_tracker_wq <- tibble::tibble(
+df_tracker_dbhydro_wq <- tibble::tibble(
   station_id = c("LOX3", "LOX6"),
   wq_param = "TP",
   date_min = "2019-01-01",
@@ -293,8 +293,8 @@ tracker_add(
   con,
   id = "test-tracker",
   description = "A tracker for testing",
-  hydro = df_tracker_hydro,
-  wq = df_tracker_wq,
+  dbhydro_hydro = df_tracker_dbhydro_hydro,
+  dbhydro_wq = df_tracker_dbhydro_wq,
   replace = TRUE
 )
 ```
@@ -308,28 +308,29 @@ tracker_remove(con, id = "test-tracker")
 ### Get Trackers
 
 Use `tracker_get()` to retrieve a tracker from the database. This
-function returns a tibble with columns `id`, `description`, `hydro`, and
-`wq`. The `hydro` and `wq` columns are lists containing tibbles with the
-dbkeys and wq stations for each tracker.
+function returns a tibble with columns `id`, `description`,
+`dbhydro_hydro`, and `dbhydro_wq`. The `dbhydro_hydro` and `dbhydro_wq`
+columns are lists containing tibbles with the DBHYDRO dbkeys and wq
+stations for each tracker.
 
 ``` r
 tracker_get(con) # get all trackers
-tracker_get(con, ids = c("tracker-1", "tracker-2")) # get specific trackers
+tracker_get(con, ids = c("test-tracker")) # get specific trackers
 ```
 
 ### Update Trackers
 
 Use `tracker_update()` to update the data associated with each tracker.
-This function in turn calls `tracker_update_hydro()` and
-`tracker_update_wq()` to update the hydrologic and wq datasets,
+This function in turn calls `tracker_update_dbhydro_hydro()` and
+`tracker_update_dbhydro_wq()` to update the hydrologic and wq datasets,
 respectively.
 
 ``` r
-tracker_update(date_min = "2019-10-01", date_max = "2019-11-30") # update all trackers
-tracker_update(ids = c("tracker-1", "tracker-2"), date_min = "2019-10-01", date_max = "2019-11-30") # update specific trackers
+tracker_update(con, date_min = "2019-10-01", date_max = "2019-11-30") # update all trackers
+tracker_update(con, ids = c("test-tracker"), date_min = "2019-10-01", date_max = "2019-11-30") # update specific trackers
 
-tracker_update_hydro(ids = "tracker-1", date_min = "2019-10-01", date_max = "2019-11-30") # update only hydrologic data
-tracker_update_wq(ids = "tracker-1", date_min = "2019-10-01", date_max = "2019-11-30") # update only wq data
+tracker_update_dbhydro_hydro(con, ids = "test-tracker", date_min = "2019-10-01", date_max = "2019-11-30") # update only hydrologic data
+tracker_update_dbhydro_wq(con, ids = "test-tracker", date_min = "2019-10-01", date_max = "2019-11-30") # update only wq data
 ```
 
 ### Tracker Data
@@ -338,6 +339,6 @@ Use `tracker_data()` to fetch all data for a single tracker over a
 specified period.
 
 ``` r
-tracker_data("tracker-1") # all data
-tracker_data("tracker-1", date_min = "2018-10-01", date_max = "2019-09-30") # specific period
+tracker_data(con, id = "test-tracker") # all data
+tracker_data(con, id = "test-tracker", date_min = "2018-10-01", date_max = "2019-09-30") # specific period
 ```

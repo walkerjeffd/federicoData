@@ -4,8 +4,8 @@
 \alias{tracker_add}
 \title{Add tracker to the database}
 \usage{
-tracker_add(con, id, description, hydro = NULL, wq = NULL,
-  replace = FALSE)
+tracker_add(con, id, description, dbhydro_hydro = NULL,
+  dbhydro_wq = NULL, replace = FALSE)
 }
 \arguments{
 \item{con}{database connection object}
@@ -14,9 +14,9 @@ tracker_add(con, id, description, hydro = NULL, wq = NULL,
 
 \item{description}{tracker description}
 
-\item{hydro}{data frame containing columns \code{dbkey}, \code{date_min}, \code{date_max}, or NULL}
+\item{dbhydro_hydro}{data frame containing columns \code{dbkey}, \code{date_min}, \code{date_max}, or NULL}
 
-\item{wq}{data frame containing columns \code{station_id}, \code{wq_param}, \code{date_min}, \code{date_max}, or NULL}
+\item{dbhydro_wq}{data frame containing columns \code{station_id}, \code{wq_param}, \code{date_min}, \code{date_max}, or NULL}
 
 \item{replace}{replace tracker if it already exists in database}
 }

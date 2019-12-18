@@ -14,7 +14,7 @@
 #' \dontrun{
 #' usgs_get_dv(
 #'   station_ids = "263180080205001",
-#'   param = "STAGE",
+#'   param = "stage",
 #'   date_min = "2018-01-01",
 #'   date_max = "2018-02-01"
 #' )

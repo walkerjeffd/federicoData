@@ -13,13 +13,13 @@ usgs_clean_dv(x)
 tibble
 }
 \description{
-Clean USGS daily values dataset
+Renames columns and adds new columns for param, units, stat_code
 }
 \examples{
 \dontrun{
 x <- usgs_get_dv(
   station_ids = "263180080205001",
-  param = "STAGE",
+  param = "stage",
   date_min = "2018-01-01",
   date_max = "2018-02-01"
 )

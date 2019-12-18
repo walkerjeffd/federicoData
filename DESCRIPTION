@@ -32,4 +32,5 @@ Imports:
     rlang,
     DBI,
     RPostgreSQL,
-    glue
+    glue,
+    dataRetrieval

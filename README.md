@@ -77,6 +77,29 @@ dbhydro_batch_get_wq(
 )
 ```
 
+The `dbhydro_clean_*()` functions can be used to clean the DBHYDRO
+datasets. This must be done before these datasets can be inserted into
+the database.
+
+``` r
+df_hydro_raw <- dbhydro_get_hydro(
+  dbkeys = c("91599", "91473", "91663"),
+  date_min = "2019-10-01",
+  date_max = "2019-10-31",
+  raw = TRUE
+)
+df_hydro <- dbhydro_clean_hydro(df_hydro_raw)
+
+db_wq_raw <- dbhydro_get_wq(
+  station_ids = c("LOX3", "LOX4", "LOX5"),
+  wq_param = "TP",
+  date_min = "2019-09-01",
+  date_max = "2019-10-31",
+  raw = TRUE
+)
+df_wq <- dbhydro_clean_wq(df_wq_raw)
+```
+
 ## USGS Data
 
 ``` r
@@ -90,29 +113,6 @@ usgs_get_dv(
   date_min = "2018-01-01",
   date_max = "2018-02-01"
 )
-```
-
-### Cleaning Data
-
-The `dbhydro_clean_*()` functions can be used to clean the DBHYDRO
-datasets. This must be done before these datasets can be inserted into
-the database.
-
-``` r
-df_hydro_raw <- dbhydro_get_hydro(
-  dbkeys = c("91599", "91473", "91663"),
-  date_min = "2019-10-01",
-  date_max = "2019-10-31"
-)
-df_hydro <- dbhydro_clean_hydro(df_hydro_raw)
-
-db_wq_raw <- dbhydro_get_wq(
-  station_ids = c("LOX3", "LOX4", "LOX5"),
-  wq_param = "TP",
-  date_min = "2019-09-01",
-  date_max = "2019-10-31"
-)
-df_wq <- dbhydro_clean_wq(df_wq_raw)
 ```
 
 ## Database
@@ -150,7 +150,7 @@ con <- db_connect(host = "localhost", dbname = "faadb", user = "me", password = 
 db_disconnect(con)
 ```
 
-### Manage DBHYDRO Data
+### DBHYDRO Datasets
 
 #### Stations
 
@@ -238,7 +238,7 @@ db_get_dbhydro_wq(con, station_ids = c("LOX3", "LOX6"), date_min = "2019-01-01",
 db_get_dbhydro_wq(con, station_ids = c("LOX3", "LOX6"), wq_param = "TP") # specific parameter, all dates
 ```
 
-#### USACE Preliminary Water Quality Data
+### USACE Preliminary Water Quality Data
 
 Use `db_update_usace_wq()` to load a new version of the USACE
 Preliminary WQ
@@ -270,6 +270,15 @@ df <- df_xlsx %>%
   )
 
 db_update_usace_wq(con, df)
+```
+
+### USGS Daily Values Dataset
+
+``` r
+db_add_usgs_stations(con, c("263180080205001", "263000080120001"))
+db_get_usgs_stations(con)
+df_usgs_dv_stage <- usgs_get_dv(station_ids = c("263180080205001", "263000080120001"), param = "stage", date_min = "2018-01-01", date_max = "2018-01-31")
+db_update_usgs_dv(con, df = df_usgs_dv_stage)
 ```
 
 ## Trackers

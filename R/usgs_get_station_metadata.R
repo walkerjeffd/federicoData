@@ -18,11 +18,6 @@ usgs_get_station_metadata <- function (station_ids, raw = FALSE) {
 
   missing_stations <- setdiff(station_ids, df$site_no)
 
-  if (length(missing_stations) > 0) {
-    logger::log_warn("usgs did not return all stations, missing {length(missing_stations)} ({paste0(missing_stations, collapse = ', ')})")
-    stop("failed to get metadata for all usgs stations")
-  }
-
   if (raw) {
     return(df)
   }

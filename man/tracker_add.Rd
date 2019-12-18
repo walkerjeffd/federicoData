@@ -5,7 +5,7 @@
 \title{Add tracker to the database}
 \usage{
 tracker_add(con, id, description, dbhydro_hydro = NULL,
-  dbhydro_wq = NULL, replace = FALSE)
+  dbhydro_wq = NULL, usgs_dv = NULL, replace = FALSE)
 }
 \arguments{
 \item{con}{database connection object}
@@ -17,6 +17,8 @@ tracker_add(con, id, description, dbhydro_hydro = NULL,
 \item{dbhydro_hydro}{data frame containing columns \code{dbkey}, \code{date_min}, \code{date_max}, or NULL}
 
 \item{dbhydro_wq}{data frame containing columns \code{station_id}, \code{wq_param}, \code{date_min}, \code{date_max}, or NULL}
+
+\item{usgs_dv}{data frame containing columns \code{station_id}, \code{param}, \code{date_min}, \code{date_max}, or NULL}
 
 \item{replace}{replace tracker if it already exists in database}
 }

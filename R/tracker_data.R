@@ -30,6 +30,7 @@ tracker_data <- function(con, id, date_min = NULL, date_max = NULL) {
 
   df_dbhydro_hydro <- NULL
   df_dbhydro_wq <- NULL
+  df_usgs_dv <- NULL
 
   if (!is.null(tracker$dbhydro_hydro) && nrow(tracker$dbhydro_hydro) > 0) {
     df_dbhydro_hydro <- db_get_dbhydro_hydro(con, dbkeys = tracker$dbhydro_hydro$dbkey, date_min = date_min, date_max = date_max)
@@ -37,10 +38,14 @@ tracker_data <- function(con, id, date_min = NULL, date_max = NULL) {
   if (!is.null(tracker$dbhydro_wq) && nrow(tracker$dbhydro_wq) > 0) {
     df_dbhydro_wq <- db_get_dbhydro_wq(con, station_ids = tracker$dbhydro_wq$station_id, date_min = date_min, date_max = date_max)
   }
+  if (!is.null(tracker$usgs_dv) && nrow(tracker$usgs_dv) > 0) {
+    df_usgs_dv <- db_get_usgs_dv(con, station_ids = tracker$usgs_dv$station_id, date_min = date_min, date_max = date_max)
+  }
 
   list(
     tracker = tracker,
     dbhydro_hydro = df_dbhydro_hydro,
-    dbhydro_wq = df_dbhydro_wq
+    dbhydro_wq = df_dbhydro_wq,
+    usgs_dv = df_usgs_dv
   )
 }

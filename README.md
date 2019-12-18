@@ -38,8 +38,6 @@ logger::log_threshold(logger::DEBUG, namespace = "faahydro")
 
 ## DBHYDRO Data
 
-### Fetching Data
-
 The `dbhydro_get_*()` functions are used to fetch hydrologic and water
 quality data from DBHYDRO. These functions call the respective `get_*()`
 functions from the `dbhydroR` package, and then perform some additional
@@ -76,6 +74,21 @@ dbhydro_batch_get_wq(
   date_min = "2019-09-01",
   date_max = "2019-10-31",
   batch_size = 2
+)
+```
+
+## USGS Data
+
+``` r
+usgs_get_station_metadata(station_ids = "263180080205001")
+```
+
+``` r
+usgs_get_dv(
+  station_ids = "263180080205001", 
+  param = "stage",
+  date_min = "2018-01-01",
+  date_max = "2018-02-01"
 )
 ```
 
@@ -119,8 +132,9 @@ Then install the schema for each set of tables.
 
 ``` sh
 psql -d faadb -f inst/sql/schema-dbhydro.sql
-psql -d faadb -f inst/sql/schema-usace.sql
 psql -d faadb -f inst/sql/schema-tracker.sql
+psql -d faadb -f inst/sql/schema-usace.sql
+psql -d faadb -f inst/sql/schema-usgs.sql
 ```
 
 ### Connecting

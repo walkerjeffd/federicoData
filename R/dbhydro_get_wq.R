@@ -45,7 +45,8 @@ dbhydro_get_wq <- function (station_ids, wq_param, date_min, date_max, raw = FAL
   )
 
   df <- tibble::as_tibble(df_raw) %>%
-    janitor::clean_names()
+    janitor::clean_names() %>%
+    dplyr::filter(!is.na(station_id))
 
   logger::log_debug("received {nrow(df)} record(s) from dbhydro")
 

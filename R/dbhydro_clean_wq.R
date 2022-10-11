@@ -19,6 +19,12 @@
 dbhydro_clean_wq <- function (x) {
   logger::log_debug("cleaning wq dataset from DBHYDRO (nrow = {nrow(x)})")
 
+  empty_rows <- sum(is.na(x$station_id))
+  if (empty_rows > 0) {
+    logger::log_warn("removing {empty_rows} empty rows")
+    x <- dplyr::filter(x, !is.na(station_id))
+  }
+
   if (any(!x$test_name %in% dbhydro_wq_params$test_name)) {
     missing_values <- setdiff(unique(x$test_name), dbhydro_wq_params$test_name)
     logger::log_warn("dataset contains test_name values that are not defined in dbhydro_wq_params ({paste0(missing_values, collapse = ',')})")

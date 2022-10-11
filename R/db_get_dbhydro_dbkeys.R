@@ -38,7 +38,7 @@ db_get_dbhydro_dbkeys <- function(con, dbkeys = NULL, include_stations = FALSE) 
   }
 
   if (nrow(df) > 0 && include_stations) {
-    df <- df[, -which(names(df) == "station_id")[2]]
+    df <- select(df, -station_id..14)
   }
 
   df

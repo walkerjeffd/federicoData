@@ -88,8 +88,8 @@ CREATE TABLE dbhydro_wq (
   result_comments TEXT
 );
 CREATE UNIQUE INDEX CONCURRENTLY
-  dbhydro_wq_station_param_sample_project_source_idx
-  ON dbhydro_wq(station_id, wq_param, sample_id, project_code, source);
+  dbhydro_wq_station_param_date_sample_project_source_idx
+  ON dbhydro_wq(station_id, wq_param, date, sample_id, project_code, source);
 
 CREATE TABLE dbhydro_hydro (
   id BIGSERIAL PRIMARY KEY,

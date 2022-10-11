@@ -17,7 +17,7 @@ db_connect <- function(host, dbname, user, password = NULL, port = 5432) {
   logger::log_info("connecting to postgresql://{user}@{host}:{port}/{dbname}")
 
   DBI::dbConnect(
-    RPostgreSQL::PostgreSQL(),
+    RPostgres::Postgres(),
     host = host,
     port = port,
     user = user,

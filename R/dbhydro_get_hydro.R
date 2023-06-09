@@ -26,7 +26,7 @@ dbhydro_get_hydro <- function (dbkeys, date_min, date_max, raw = FALSE) {
       raw = TRUE
     ),
     error = function(c) {
-      logger::log_warn("no data found in dbhydro, returning empty tibble (dbhydroR: {c$message})")
+      logger::log_warn("no data found in dbhydro, returning empty tibble (dbhydroR: {c$message}, dbkeys: {str_c(dbkeys, collapse = ',')}, date_min: {date_min}, date_max: {date_max})")
       tibble::tibble()
     }
   )

@@ -1,6 +1,6 @@
 Package: faahydro
 Title: Tools for fetching, processing, and analyzing hydrologic datasets in South Florida
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: 
     person(given = "Jeffrey",
            family = "Walker",

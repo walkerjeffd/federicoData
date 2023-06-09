@@ -39,7 +39,7 @@ dbhydro_get_wq <- function (station_ids, wq_param, date_min, date_max, raw = FAL
       raw = TRUE
     ),
     error = function(c) {
-      logger::log_warn("no data found in dbhydro, returning empty tibble (dbhydroR: {c$message})")
+      logger::log_warn("no data found in dbhydro, returning empty tibble (dbhydroR: {c$message}, station_ids: {str_c(station_ids, collapse = ',')}, wq_param: {wq_param}, date_min: {date_min}, date_max: {date_max})")
       tibble::tibble()
     }
   )

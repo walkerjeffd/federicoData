@@ -13,6 +13,11 @@
 #' }
 dbhydro_clean_hydro <- function (x) {
   logger::log_debug("cleaning hydro dataset from DBHYDRO (nrow = {nrow(x)})")
+
+  if (!"qualifier" %in% colnames(x)) {
+    x$qualifier <- NA_character_
+  }
+
   x %>%
     dplyr::mutate_at(c("dbkey", "type", "units", "qualifer"), as.character) %>%
     dplyr::mutate(

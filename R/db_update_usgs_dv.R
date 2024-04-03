@@ -84,7 +84,7 @@ db_update_usgs_dv <- function (con, df) {
   } else {
     logger::log_info("updating {nrow(df_update)} existing record(s) of {nrow(df)} total")
     logger::log_debug("deleting {nrow(df_update)} record(s)")
-    n_deleted <- DBI::dbExecute(con, glue::glue_sql("DELETE FROM usgs_dv WHERE id IN ({ids*})", ids = df_update$id))
+    n_deleted <- DBI::dbExecute(con, glue::glue_sql("DELETE FROM usgs_dv WHERE id IN ({ids*})", ids = df_update$id, .con = con))
 
     if (n_deleted != nrow(df_update)) {
       logger::log_error("failed to delete {nrow(df_update)} record(s), only {n_deleted} succeeded")

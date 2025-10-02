@@ -15,6 +15,8 @@
 #' ) # specific stations
 #' }
 db_get_usgs_stations <- function(con, station_ids = NULL) {
+  station_ids <- unique(station_ids)
+  
   if (is.null(station_ids) || length(station_ids) == 0) {
     sql <- "SELECT * FROM usgs_stations"
     station_ids <- c()

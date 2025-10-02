@@ -14,13 +14,15 @@
 dbhydro_clean_hydro <- function (x) {
   logger::log_debug("cleaning hydro dataset from DBHYDRO (nrow = {nrow(x)})")
 
-  x %>%
-    dplyr::mutate_at(c("dbkey", "type", "units", "qualifier"), as.character) %>%
-    dplyr::mutate(
-      date = lubridate::as_date(.data$date),
-      revision_date = lubridate::dmy(.data$revision_date),
-      value = as.numeric(.data$data_value),
-      qualifier = dplyr::if_else(.data$qualifier == "", NA_character_, .data$qualifier)
-    ) %>%
-    dplyr::select(c("dbkey", "type", "units", "date", "value", "qualifier", "revision_date"))
+  x <- dplyr::transmute(
+    x,
+    "dbkey" = .data$timeseriesid,
+    "type" = .data$parameter,
+    "date" = lubridate::as_date(.data$timestamp),
+    "value" = .data$value,
+    "qualifier" = .data$code,
+    "revision_date" = lubridate::as_date(.data$revision_date),
+    "quality_code" = .data$quality_code
+  )
+  x
 }

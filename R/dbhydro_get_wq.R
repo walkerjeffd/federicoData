@@ -16,35 +16,34 @@
 #' dbhydro_get_wq(
 #'   station_ids = "LOX3",
 #'   wq_param = "TP",
-#'   date_min = "2019-09-01",
-#'   date_max = "2019-10-31"
+#'   date_min = "2019-01-01",
+#'   date_max = "2019-12-31"
 #' )
 #' }
 dbhydro_get_wq <- function (station_ids, wq_param, date_min, date_max, raw = FALSE) {
   logger::log_debug("fetching wq data from dbhydro for {length(station_ids)} station(s) from {date_min} to {date_max} for {wq_param}")
 
-  test_name <- dbhydro_wq_params$test_name[which(dbhydro_wq_params$wq_param == wq_param)]
+  stopifnot(
+    all(!is.na(station_ids)),
+    all(!duplicated(station_ids))
+  )
 
-  if (length(test_name) == 0) {
+  param_code <- dbhydro_wq_params$param_code[which(dbhydro_wq_params$wq_param == wq_param)]
+
+  if (length(param_code) == 0) {
     logger::log_error("unknown value for wq_param ({wq_param}), must be found in dbhydro_wq_params$wq_param")
     stop("unknown wq parameter")
   }
 
-  df_raw <- tryCatch(
-    dbhydroR::get_wq(
-      station_id = station_ids,
-      date_min = as.character(date_min),
-      date_max = as.character(date_max),
-      test_name = test_name,
-      raw = TRUE
-    ),
-    error = function(c) {
-      logger::log_warn("no data found in dbhydro, returning empty tibble (dbhydroR: {c$message}, station_ids: {str_c(station_ids, collapse = ',')}, wq_param: {wq_param}, date_min: {date_min}, date_max: {date_max})")
-      tibble::tibble()
-    }
+  df_raw <- dbhydroInsights::get_wq_data(
+    locations = station_ids,
+    location_type = "STATION",
+    parameters = param_code,
+    startDate = as.character(date_min),
+    endDate = as.character(date_max)
   )
 
-  df <- tibble::as_tibble(df_raw) %>%
+  df <- tibble::as_tibble(df_raw) |>
     janitor::clean_names()
 
   logger::log_debug("received {nrow(df)} record(s) from dbhydro")

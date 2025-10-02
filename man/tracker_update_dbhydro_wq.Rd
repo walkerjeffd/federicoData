@@ -4,8 +4,13 @@
 \alias{tracker_update_dbhydro_wq}
 \title{Update DBHYDRO water quality data for trackers}
 \usage{
-tracker_update_dbhydro_wq(con, ids = NULL, date_min = NULL,
-  date_max = NULL, batch_size = 5)
+tracker_update_dbhydro_wq(
+  con,
+  ids = NULL,
+  date_min = NULL,
+  date_max = NULL,
+  batch_size = 5
+)
 }
 \arguments{
 \item{con}{database connection object}

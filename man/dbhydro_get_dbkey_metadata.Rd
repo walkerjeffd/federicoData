@@ -4,14 +4,10 @@
 \alias{dbhydro_get_dbkey_metadata}
 \title{Get DBKEY metadata from DBHYDRO}
 \usage{
-dbhydro_get_dbkey_metadata(dbkeys, query = list(), batch_size = 10)
+dbhydro_get_dbkey_metadata(dbkeys)
 }
 \arguments{
 \item{dbkeys}{character vector of DBKEYs}
-
-\item{query}{list containing additional query parameters to pass with request}
-
-\item{batch_size}{number of DBKEYs per batch (API limit)}
 }
 \value{
 tibble containing metadata for specified DBKEYs

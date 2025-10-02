@@ -12,6 +12,8 @@
 #' db_get_dbhydro_stations(con, station_ids = c("LOX3", "LOX6"))
 #' }
 db_get_dbhydro_stations <- function(con, station_ids = NULL) {
+  station_ids <- unique(station_ids)
+  
   if (is.null(station_ids) || length(station_ids) == 0) {
     sql <- "SELECT * FROM dbhydro_stations"
     station_ids <- c()

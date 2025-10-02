@@ -69,12 +69,12 @@ db_update_usgs_dv <- function (con, df) {
   } else {
     df_merge <-
 
-    df_insert <- df %>%
+    df_insert <- df |>
       dplyr::anti_join(df_existing, by = c("station_id", "param", "date"))
 
-    df_update <- df %>%
-      dplyr::inner_join(df_existing, by = c("station_id", "param", "date")) %>%
-      dplyr::filter(!is.na(.data$id), .data$value != .data$db_value) %>%
+    df_update <- df |>
+      dplyr::inner_join(df_existing, by = c("station_id", "param", "date")) |>
+      dplyr::filter(!is.na(.data$id), .data$value != .data$db_value) |>
       dplyr::select(-.data$db_value)
   }
 

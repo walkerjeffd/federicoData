@@ -1,6 +1,6 @@
 Package: faahydro
 Title: Tools for fetching, processing, and analyzing hydrologic datasets in South Florida
-Version: 0.2.2
+Version: 1.0.0
 Authors@R: 
     person(given = "Jeffrey",
            family = "Walker",
@@ -13,12 +13,12 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends:
-    R (>= 2.10)
+    R (>= 4.5)
 Suggests: 
     testthat (>= 2.1.0)
-RoxygenNote: 6.1.1
+RoxygenNote: 7.3.2
 Imports: 
-    dbhydroR,
+    dbhydroInsights,
     logger,
     tibble,
     lubridate,

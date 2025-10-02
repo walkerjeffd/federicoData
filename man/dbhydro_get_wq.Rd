@@ -28,8 +28,8 @@ Get water quality data from DBHYDRO for specified station(s) and date range
 dbhydro_get_wq(
   station_ids = "LOX3",
   wq_param = "TP",
-  date_min = "2019-09-01",
-  date_max = "2019-10-31"
+  date_min = "2019-01-01",
+  date_max = "2019-12-31"
 )
 }
 }

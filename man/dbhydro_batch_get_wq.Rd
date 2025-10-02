@@ -4,8 +4,14 @@
 \alias{dbhydro_batch_get_wq}
 \title{Get water quality data from DBHYDRO in batches}
 \usage{
-dbhydro_batch_get_wq(station_ids, wq_param, date_min, date_max,
-  batch_size = 5, raw = FALSE)
+dbhydro_batch_get_wq(
+  station_ids,
+  wq_param,
+  date_min,
+  date_max,
+  batch_size = 5,
+  raw = FALSE
+)
 }
 \arguments{
 \item{station_ids}{character vector containing one or more station_id's}

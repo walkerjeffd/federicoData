@@ -24,8 +24,8 @@
 tracker_data <- function(con, id, date_min = NULL, date_max = NULL) {
   logger::log_info("fetching data for tracker ({id}) from {ifelse(is.null(date_min), 'N/A', date_min)} to {ifelse(is.null(date_max), 'N/A', date_max)}")
 
-  tracker <- tracker_get(con, ids = id) %>%
-    purrr::transpose() %>%
+  tracker <- tracker_get(con, ids = id) |>
+    purrr::transpose() |>
     purrr::pluck(1)
 
   df_dbhydro_hydro <- NULL

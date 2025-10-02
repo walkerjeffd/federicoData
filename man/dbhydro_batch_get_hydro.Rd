@@ -4,8 +4,13 @@
 \alias{dbhydro_batch_get_hydro}
 \title{Get hydrologic data from DBHYDRO in batches}
 \usage{
-dbhydro_batch_get_hydro(dbkeys, date_min, date_max, batch_size = 5,
-  raw = FALSE)
+dbhydro_batch_get_hydro(
+  dbkeys,
+  date_min,
+  date_max,
+  batch_size = 5,
+  raw = FALSE
+)
 }
 \arguments{
 \item{dbkeys}{character vector of DBKEY(s)}

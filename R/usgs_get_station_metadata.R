@@ -22,13 +22,14 @@ usgs_get_station_metadata <- function (station_ids, raw = FALSE) {
     return(df)
   }
 
-  df <- tibble::as_tibble(df) %>%
-    dplyr::select(
-      station_id = .data$site_no,
-      station_name = .data$station_nm,
-      latitude = .data$dec_lat_va,
-      longitude = .data$dec_long_va
-    )
+  df <- tibble::as_tibble(df)
+  df <- dplyr::select(
+    df,
+    station_id = .data$site_no,
+    station_name = .data$station_nm,
+    latitude = .data$dec_lat_va,
+    longitude = .data$dec_long_va
+  )
 
   df
 }

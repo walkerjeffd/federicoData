@@ -16,7 +16,7 @@ db_update_usace_wq <- function (con, df) {
   logger::log_info("updating preliminary usace wq data")
 
   logger::log_debug("adding wq_param")
-  df <- df %>%
+  df <- df |>
     dplyr::left_join(
       dbhydro_wq_params,
       by = "test_name"

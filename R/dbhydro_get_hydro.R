@@ -7,38 +7,32 @@
 #' @param date_max end date
 #' @param raw if TRUE, return raw results from DBHYDRO, otherwise pass results through \code{dbhydro_clean_hydro()} before returning (default)
 #'
-#' @return tibble containing raw data, or empty tibble (no columns) if no data found
+#' @return tibble containing raw data, or NULL if no data found
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' dbhydro_get_hydro(dbkeys = "91599", date_min = "2019-10-01", date_max = "2019-10-31")
 #' }
-#' @importFrom dplyr %>%
 dbhydro_get_hydro <- function (dbkeys, date_min, date_max, raw = FALSE) {
   logger::log_debug("fetching hydro data from dbhydro for {length(dbkeys)} dbkey(s) from {date_min} to {date_max}")
 
-  df_raw <- tryCatch(
-    dbhydroR::get_hydro(
-      dbkey = dbkeys,
-      date_min = as.character(date_min),
-      date_max = as.character(date_max),
-      raw = TRUE
-    ),
-    error = function(c) {
-      logger::log_warn("no data found in dbhydro, returning empty tibble (dbhydroR: {c$message}, dbkeys: {str_c(dbkeys, collapse = ',')}, date_min: {date_min}, date_max: {date_max})")
-      tibble::tibble()
-    }
+  stopifnot(
+    all(!is.na(dbkeys)),
+    all(!duplicated(dbkeys))
   )
 
-  # remove duplicate station columns
-  if (sum(names(df_raw) == "station") == 2) {
-    df <- df_raw[, -which(names(df_raw) == "station")]
-  } else {
-    df <- df_raw
+  df_raw <- dbhydroInsights::get_timeseries_data(
+    dbkey = dbkeys,
+    startDate = as.character(date_min),
+    endDate = as.character(date_max)
+  )
+
+  if (is.null(df_raw) || nrow(df_raw) == 0) {
+    return(NULL)
   }
 
-  df <- tibble::as_tibble(df) %>%
+  df <- tibble::as_tibble(df_raw) |>
     janitor::clean_names()
 
   logger::log_debug("received {nrow(df)} record(s) from dbhydro")

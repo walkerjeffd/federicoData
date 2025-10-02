@@ -4,8 +4,15 @@
 \alias{tracker_add}
 \title{Add tracker to the database}
 \usage{
-tracker_add(con, id, description, dbhydro_hydro = NULL,
-  dbhydro_wq = NULL, usgs_dv = NULL, replace = FALSE)
+tracker_add(
+  con,
+  id,
+  description,
+  dbhydro_hydro = NULL,
+  dbhydro_wq = NULL,
+  usgs_dv = NULL,
+  replace = FALSE
+)
 }
 \arguments{
 \item{con}{database connection object}

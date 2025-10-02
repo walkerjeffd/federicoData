@@ -4,15 +4,10 @@
 \alias{dbhydro_get_station_metadata}
 \title{Get water quality station metadata from DBHYDRO}
 \usage{
-dbhydro_get_station_metadata(station_ids, query = list(),
-  batch_size = 10)
+dbhydro_get_station_metadata(station_ids)
 }
 \arguments{
 \item{station_ids}{character vector of station_id(s)}
-
-\item{query}{list of additional query parameters to pass with request}
-
-\item{batch_size}{number of stations per batch (API limit)}
 }
 \value{
 tibble of metadata for each station_id

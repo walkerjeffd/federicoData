@@ -16,7 +16,7 @@ dbhydro_get_hydro(dbkeys, date_min, date_max, raw = FALSE)
 \item{raw}{if TRUE, return raw results from DBHYDRO, otherwise pass results through \code{dbhydro_clean_hydro()} before returning (default)}
 }
 \value{
-tibble containing raw data, or empty tibble (no columns) if no data found
+tibble containing raw data, or NULL if no data found
 }
 \description{
 Get hydrologic data from DBHYDRO for specified DBKEY(s) and date range

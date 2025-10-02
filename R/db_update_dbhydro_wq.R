@@ -47,7 +47,7 @@ db_update_dbhydro_wq <- function (con, df) {
   df_existing <- DBI::dbGetQuery(
     con,
     glue::glue_sql(
-      "SELECT id, station_id, wq_param, sample_id, project_code, value as db_value FROM dbhydro_wq WHERE station_id IN ({station_ids*}) AND date >= {date_min} AND date <= {date_max}",
+      "SELECT id, station_id, wq_param, sample_id, project_code, quality_code, value as db_value FROM dbhydro_wq WHERE station_id IN ({station_ids*}) AND date >= {date_min} AND date <= {date_max}",
       .con = con
     )
   )
@@ -58,15 +58,15 @@ db_update_dbhydro_wq <- function (con, df) {
     df_insert <- df
     df_update <- data.frame()
   } else {
-    df_merge <- df %>%
-      dplyr::left_join(df_existing, by = c("station_id", "wq_param", "sample_id", "project_code"))
+    df_merge <- df |>
+      dplyr::left_join(df_existing, by = c("station_id", "wq_param", "sample_id", "project_code", "quality_code"))
 
-    df_insert <- df_merge %>%
-      dplyr::filter(is.na(.data$id)) %>%
+    df_insert <- df_merge |>
+      dplyr::filter(is.na(.data$id)) |>
       dplyr::select(-c("id", "db_value"))
 
-    df_update <- df_merge %>%
-      dplyr::filter(!is.na(.data$id), abs(.data$value - .data$db_value) > 0.0001) %>%
+    df_update <- df_merge |>
+      dplyr::filter(!is.na(.data$id), abs(.data$value - .data$db_value) > 0.0001) |>
       dplyr::select(-c("db_value"))
   }
 
@@ -84,8 +84,8 @@ db_update_dbhydro_wq <- function (con, df) {
     }
 
     logger::log_debug("inserting {nrow(df_update)} record(s) that were deleted")
-    # df_update <- df_update %>%
-    #   dplyr::mutate_at(c("first_trigger_date", "collection_date", "measure_date", "receive_date", "filtration_date"), format, format = "%Y-%m-%d %H:%M:%S%z") %>%
+    # df_update <- df_update |>
+    #   dplyr::mutate_at(c("first_trigger_date", "collection_date", "measure_date", "receive_date", "filtration_date"), format, format = "%Y-%m-%d %H:%M:%S%z") |>
     #   str
     ok <- DBI::dbWriteTable(con, "dbhydro_wq", df_update, append = TRUE, row.names = FALSE)
 

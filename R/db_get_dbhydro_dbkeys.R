@@ -10,35 +10,35 @@
 #' @examples
 #' \dontrun{
 #' db_get_dbhydro_dbkeys(con) # get all DBKEYs
-#' db_get_dbhydro_dbkeys(con, dbkeys = c("91346", "91347"))
+#' db_get_dbhydro_dbkeys(con, dbkeys = c("15018", "15034"))
 #' db_get_dbhydro_dbkeys(
 #'   con,
-#'   dbkeys = c("91346", "91347"),
+#'   dbkeys = c("15018", "15034"),
 #'   include_stations = TRUE
 #' ) # include station metadata
 #' }
 db_get_dbhydro_dbkeys <- function(con, dbkeys = NULL, include_stations = FALSE) {
-  sql_where <- ""
-  sql_join <- ""
+  dbkeys <- unique(dbkeys)
 
-  if (!is.null(dbkeys) && length(dbkeys) > 0) {
-    sql_where <- glue::glue_sql("WHERE dbhydro_dbkeys.dbkey IN ({ids*})", ids = dbkeys, .con = con)
+  sql_dbkeys <- glue::glue_sql("SELECT * FROM dbhydro_dbkeys WHERE dbhydro_dbkeys.dbkey IN ({ids*})", ids = dbkeys, .con = con)
+
+  df_dbkeys <- DBI::dbGetQuery(con, sql_dbkeys)
+
+  if (length(dbkeys) > 0 && nrow(df_dbkeys) != length(dbkeys)) {
+    logger::log_warn("database did not return all requested dbkeys (missing: {paste0(setdiff(dbkeys, df_dbkeys$dbkey), collapse = ',')})")
   }
 
   if (include_stations) {
-    sql_join <- "LEFT JOIN dbhydro_stations ON dbhydro_dbkeys.station_id = dbhydro_stations.station_id"
-  }
+    sql_stations <- glue::glue_sql(
+      "SELECT * FROM dbhydro_stations WHERE station_id IN ({ids*})",
+      ids = unique(df_dbkeys$station_id),
+      .con = con
+    )
+    df_stations <- DBI::dbGetQuery(con, sql_stations)
 
-  sql <- glue::glue("SELECT * FROM dbhydro_dbkeys {sql_join} {sql_where}")
-
-  df <- DBI::dbGetQuery(con, sql)
-
-  if (length(dbkeys) > 0 && nrow(df) != length(dbkeys)) {
-    logger::log_warn("database did not return all requested dbkeys (missing: {paste0(setdiff(dbkeys, df$dbkey), collapse = ',')})")
-  }
-
-  if (nrow(df) > 0 && include_stations) {
-    df <- select(df, -station_id..14)
+    df <- dplyr::left_join(df_dbkeys, df_stations, by = "station_id")
+  } else {
+    df <- df_dbkeys
   }
 
   df

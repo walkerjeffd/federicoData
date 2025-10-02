@@ -19,140 +19,67 @@
 dbhydro_clean_wq <- function (x) {
   logger::log_debug("cleaning wq dataset from DBHYDRO (nrow = {nrow(x)})")
 
-  empty_rows <- sum(is.na(x$station_id))
-  if (empty_rows > 0) {
-    logger::log_warn("removing {empty_rows} empty rows")
-    x <- dplyr::filter(x, !is.na(station_id))
-  }
-
-  if (any(!x$test_name %in% dbhydro_wq_params$test_name)) {
-    missing_values <- setdiff(unique(x$test_name), dbhydro_wq_params$test_name)
+  if (nrow(x) > 0 && !all(x$parameter %in% dbhydro_wq_params$test_name)) {
+    missing_values <- setdiff(unique(x$parameter), dbhydro_wq_params$test_name)
     logger::log_warn("dataset contains test_name values that are not defined in dbhydro_wq_params ({paste0(missing_values, collapse = ',')})")
   }
 
-  x %>%
-    dplyr::mutate_at(
-      c(
-        "project_code",
-        "station_id",
-        "sample_id",
-        "sample_type_new",
-        "collection_method",
-        "depth_unit",
-        "matrix",
-        "test_name",
-        "method",
-        "uncertainty",
-        "units",
-        "remark_code",
-        "flag",
-        "lims_number",
-        "collection_agency",
-        "source",
-        "owner",
-        "validation_level",
-        "validator",
-        "sampling_purpose",
-        "data_investigation",
-        "qc_type",
-        "program_type",
-        "sample_comments",
-        "result_comments",
-        "first_trigger_date",
-        "collection_date",
-        "measure_date",
-        "receive_date",
-        "filtration_date"
-      ),
-      as.character
-    ) %>%
-    dplyr::mutate_at(
-      c(
-        "depth",
-        "value",
-        "sigfig_value",
-        "mdl",
-        "pql",
-        "rdl",
-        "t_depth",
-        "upper_depth",
-        "lower_depth",
-        "dcs_meters"
-      ),
-      as.numeric
-    ) %>%
-    dplyr::mutate_at(
-      c(
-        "test_number",
-        "storet_code",
-        "sample_type",
-        "discharge",
-        "up_down_stream",
-        "weather_code",
-        "ndec"),
-      as.integer
-    ) %>%
-    dplyr::mutate(
-      date = lubridate::as_date(.data$date)
-    ) %>%
-    dplyr::mutate_at(
-      c("first_trigger_date", "collection_date", "measure_date", "receive_date", "filtration_date"),
-      lubridate::dmy_hm,
-      tz = "US/Eastern"
-    ) %>%
-    dplyr::left_join(
-      dbhydro_wq_params,
-      by = "test_name"
-    ) %>%
-    dplyr::select(c(
-      "station_id",
-      "wq_param",
-      "date",
-      "value",
-      "units",
-      "flag",
-      "sample_type_new",
-      "collection_method",
-      "project_code",
-      "sample_id",
-      "depth",
-      "depth_unit",
-      "matrix",
-      "test_number",
-      "test_name",
-      "storet_code",
-      "method",
-      "first_trigger_date",
-      "collection_date",
-      "measure_date",
-      "receive_date",
-      "sigfig_value",
-      "uncertainty",
-      "mdl",
-      "pql",
-      "rdl",
-      "remark_code",
-      "lims_number",
-      "collection_agency",
-      "source",
-      "owner",
-      "validation_level",
-      "validator",
-      "sampling_purpose",
-      "data_investigation",
-      "t_depth",
-      "upper_depth",
-      "lower_depth",
-      "dcs_meters",
-      "filtration_date",
-      "sample_type",
-      "qc_type",
-      "discharge",
-      "up_down_stream",
-      "weather_code",
-      "program_type",
-      "ndec",
-      "sample_comments",
-      "result_comments"
-    ))
+  x <- dplyr::left_join(
+    x,
+    dplyr::select(dbhydro_wq_params, "test_number" = .data$param_code, "wq_param"),
+    by = "test_number"
+  )
+  x <- dplyr::transmute(
+    x, 
+    "station_id" = .data$station,
+    "wq_param" = .data$wq_param,
+    "date" = lubridate::as_date(.data$collect_date),
+    "value" = .data$value,
+    "units" = .data$units,
+    "flag" = .data$flag,
+    "sample_type_new" = .data$sample_type,
+    "collection_method" = .data$collect_method,
+    "project_code" = .data$project,
+    "sample_id" = .data$sample_id,
+    "depth" = .data$depth,
+    "depth_unit" = .data$depth_units,
+    "matrix" = .data$matrix,
+    "test_number" = .data$test_number,
+    "test_name" = .data$parameter,
+    "storet_code" = .data$storet_code,
+    "method" = .data$method,
+    "first_trigger_date" = .data$first_trigger_date,
+    "collection_date" = .data$collect_date,
+    "measure_date" = .data$measure_date,
+    "receive_date" = .data$receive_date,
+    "sigfig_value" = .data$sig_fig_value,
+    "uncertainty" = .data$uncertainty,
+    "mdl" = .data$mdl,
+    "pql" = .data$pql,
+    "rdl" = .data$rdl,
+    "remark_code" = .data$remark_code,
+    "lims_number" = .data$lims_number,
+    "collection_agency" = .data$collection_agency,
+    "source" = .data$source,
+    "owner" = .data$owner,
+    "validation_level" = .data$validation_level,
+    "validator" = .data$validator,
+    "sampling_purpose" = .data$sampling_purpose,
+    "data_investigation" = .data$data_investigation,
+    "t_depth" = .data$total_depth,
+    "upper_depth" = .data$upper_depth,
+    "lower_depth" = .data$lower_depth,
+    "dcs_meters" = .data$dcs_meters,
+    "filtration_date" = .data$filtration_date,
+    # "sample_type" = .data$sample_type,
+    "qc_type" = ifelse(.data$sample_type == "SAMP", NA_character_, .data$sample_type),
+    "discharge" = .data$discharge,
+    # "up_down_stream" = .data$up_down_stream,
+    "weather_code" = .data$weather_code,
+    "program_type" = .data$program_type,
+    "ndec" = .data$n_dec,
+    "sample_comments" = .data$sample_comment,
+    "result_comments" = .data$result_comment,
+    "quality_code" = .data$quality_code
+  )
 }

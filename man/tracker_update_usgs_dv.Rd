@@ -4,8 +4,13 @@
 \alias{tracker_update_usgs_dv}
 \title{Update USGS daily values datasets for trackers}
 \usage{
-tracker_update_usgs_dv(con, ids = NULL, date_min = NULL,
-  date_max = NULL, batch_size = 5)
+tracker_update_usgs_dv(
+  con,
+  ids = NULL,
+  date_min = NULL,
+  date_max = NULL,
+  batch_size = 5
+)
 }
 \arguments{
 \item{con}{database connection object}

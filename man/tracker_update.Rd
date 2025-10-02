@@ -4,9 +4,15 @@
 \alias{tracker_update}
 \title{Update hydrologic and water quality data for trackers}
 \usage{
-tracker_update(con, ids = NULL, date_min = NULL, date_max = NULL,
-  dbhydro_hydro_batch_size = 5, dbhydro_wq_batch_size = 5,
-  usgs_dv_batch_size = 5)
+tracker_update(
+  con,
+  ids = NULL,
+  date_min = NULL,
+  date_max = NULL,
+  dbhydro_hydro_batch_size = 5,
+  dbhydro_wq_batch_size = 5,
+  usgs_dv_batch_size = 5
+)
 }
 \arguments{
 \item{con}{database connection object}

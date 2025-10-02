@@ -51,7 +51,7 @@ logger::log_threshold(logger::DEBUG, namespace = "faahydro")
 ## DBHYDRO Data
 
 The `dbhydro_get_*()` functions are used to fetch hydrologic and water quality data from DBHYDRO.
-These functions call the respective `get_*()` functions from the `dbhydroR` package,
+These functions call the respective `get_*()` functions from the `dbhydroInsights` package,
 and then perform some additional cleaning of the dataset (e.g., parsing dates, removing duplicate columns).
 
 ```{r dbhydro-get, eval = FALSE}

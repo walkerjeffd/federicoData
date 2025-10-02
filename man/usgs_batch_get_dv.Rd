@@ -4,8 +4,14 @@
 \alias{usgs_batch_get_dv}
 \title{Get USGS daily values data in batches}
 \usage{
-usgs_batch_get_dv(station_ids, param, date_min, date_max, batch_size = 5,
-  raw = FALSE)
+usgs_batch_get_dv(
+  station_ids,
+  param,
+  date_min,
+  date_max,
+  batch_size = 5,
+  raw = FALSE
+)
 }
 \arguments{
 \item{station_ids}{character vector containing one or more station IDs}

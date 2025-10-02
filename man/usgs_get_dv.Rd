@@ -4,8 +4,14 @@
 \alias{usgs_get_dv}
 \title{Get daily values dataset from USGS NWIS}
 \usage{
-usgs_get_dv(station_ids, param, date_min, date_max, stat_code = "00003",
-  raw = FALSE)
+usgs_get_dv(
+  station_ids,
+  param,
+  date_min,
+  date_max,
+  stat_code = "00003",
+  raw = FALSE
+)
 }
 \arguments{
 \item{station_ids}{character vector of station ID(s)}

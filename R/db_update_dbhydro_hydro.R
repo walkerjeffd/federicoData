@@ -66,15 +66,15 @@ db_update_dbhydro_hydro <- function (con, df) {
     df_insert <- df
     df_update <- data.frame()
   } else {
-    df_merge <- df %>%
+    df_merge <- df |>
       dplyr::left_join(df_existing, by = c("dbkey", "date"))
 
-    df_insert <- df_merge %>%
-      dplyr::filter(is.na(.data$id)) %>%
+    df_insert <- df_merge |>
+      dplyr::filter(is.na(.data$id)) |>
       dplyr::select(-c("id", "db_revision_date"))
 
-    df_update <- df_merge %>%
-      dplyr::filter(!is.na(.data$id), .data$revision_date > .data$db_revision_date) %>%
+    df_update <- df_merge |>
+      dplyr::filter(!is.na(.data$id), .data$revision_date > .data$db_revision_date) |>
       dplyr::select(-c("db_revision_date"))
   }
 

@@ -4,8 +4,13 @@
 \alias{db_get_dbhydro_wq}
 \title{Fetch DBHYDRO water quality data from database}
 \usage{
-db_get_dbhydro_wq(con, station_ids, wq_params = NULL, date_min = NULL,
-  date_max = NULL)
+db_get_dbhydro_wq(
+  con,
+  station_ids,
+  wq_params = NULL,
+  date_min = NULL,
+  date_max = NULL
+)
 }
 \arguments{
 \item{con}{database connection object}

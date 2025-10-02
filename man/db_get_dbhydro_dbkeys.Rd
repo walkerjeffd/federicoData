@@ -22,10 +22,10 @@ Get DBHYDRO DBKEYs from database
 \examples{
 \dontrun{
 db_get_dbhydro_dbkeys(con) # get all DBKEYs
-db_get_dbhydro_dbkeys(con, dbkeys = c("91346", "91347"))
+db_get_dbhydro_dbkeys(con, dbkeys = c("15018", "15034"))
 db_get_dbhydro_dbkeys(
   con,
-  dbkeys = c("91346", "91347"),
+  dbkeys = c("15018", "15034"),
   include_stations = TRUE
 ) # include station metadata
 }

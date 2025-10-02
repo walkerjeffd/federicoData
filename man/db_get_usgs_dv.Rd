@@ -4,8 +4,13 @@
 \alias{db_get_usgs_dv}
 \title{Fetch USGS daily values data from database}
 \usage{
-db_get_usgs_dv(con, station_ids, params = NULL, date_min = NULL,
-  date_max = NULL)
+db_get_usgs_dv(
+  con,
+  station_ids,
+  params = NULL,
+  date_min = NULL,
+  date_max = NULL
+)
 }
 \arguments{
 \item{con}{database connection object}

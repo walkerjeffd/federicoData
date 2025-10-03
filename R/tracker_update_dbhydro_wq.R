@@ -35,7 +35,7 @@ tracker_update_dbhydro_wq <- function (con, ids = NULL, date_min = NULL, date_ma
     dplyr::select(c("id", "station_id", "wq_param", "date_min", "date_max")) |>
     dplyr::filter(!is.na(.data$station_id)) |>
     dplyr::mutate(
-      date_max = dplyr::coalesce(.data$date_max, lubridate::today(tzone = "US/Eastern"))
+      date_max = dplyr::coalesce(.data$date_max, lubridate::today(tzone = "America/New_York"))
     )
 
   if (!is.null(date_min)) {

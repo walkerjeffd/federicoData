@@ -264,9 +264,9 @@ df <- df_xlsx %>%
   dplyr::select(-report_date) %>% 
   dplyr::mutate(
     test_name = "PHOSPHATE, TOTAL AS P",
-    collection_date = lubridate::force_tz(collection_date, tzone = "US/Eastern"),
+    collection_date = lubridate::force_tz(collection_date, tzone = "America/New_York"),
     date = lubridate::as_date(collection_date),
-    first_trigger_date = lubridate::mdy_hms(first_trigger_date, tz = "US/Eastern", quiet = TRUE)
+    first_trigger_date = lubridate::mdy_hms(first_trigger_date, tz = "America/New_York", quiet = TRUE)
   ) %>% 
   dplyr::mutate(
     collection_date = format(lubridate::with_tz(collection_date, tzone = "UTC"), "%Y-%m-%d %H:%M:%SZ"),

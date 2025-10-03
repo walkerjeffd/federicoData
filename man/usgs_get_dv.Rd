@@ -24,7 +24,7 @@ usgs_get_dv(
 
 \item{stat_code}{statistic code (default 00003 = daily mean)}
 
-\item{raw}{returns raw dataset returned from dataRetrieval::readNWISdv() if True, otherwise applies usgs_clean_dv()}
+\item{raw}{returns raw dataset returned from dataRetrieval::read_waterdata_daily() if True, otherwise applies usgs_clean_dv()}
 }
 \value{
 data frame (if raw = TRUE), otherwise tibble

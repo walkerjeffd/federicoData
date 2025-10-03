@@ -30,4 +30,5 @@ Imports:
     DBI,
     RPostgres,
     glue,
-    dataRetrieval
+    dataRetrieval,
+    sf

@@ -1,7 +1,7 @@
 #' Get station metadata from USGS NWIS
 #'
 #' @param station_ids character vector of station IDs
-#' @param raw return raw response from dataRetrieval::readNWISsite() if TRUE, otherwise returns tibble with subset of columns
+#' @param raw return raw response from dataRetrieval::read_waterdata_monitoring_location() if TRUE, otherwise returns tibble with subset of columns
 #'
 #' @return tibble with columns \code{station_id}, \code{station_name}, \code{latitude}, \code{longitude} (if \code{raw=FALSE})
 #' @importFrom rlang .data
@@ -14,22 +14,29 @@
 usgs_get_station_metadata <- function (station_ids, raw = FALSE) {
   logger::log_debug("fetching usgs station metadata for ({length(station_ids)}) station(s)")
 
-  df <- dataRetrieval::readNWISsite(siteNumbers = station_ids)
-
-  missing_stations <- setdiff(station_ids, df$site_no)
+  df <- dataRetrieval::read_waterdata_monitoring_location(
+    monitoring_location_id = paste0("USGS-", station_ids),
+    properties = c(
+      "monitoring_location_id",
+      "monitoring_location_name"
+    ),
+    skipGeometry = FALSE
+  )
 
   if (raw) {
     return(df)
   }
 
-  df <- tibble::as_tibble(df)
-  df <- dplyr::select(
-    df,
-    station_id = .data$site_no,
-    station_name = .data$station_nm,
-    latitude = .data$dec_lat_va,
-    longitude = .data$dec_long_va
-  )
+  df <- df |> 
+    dplyr::select(
+      station_id = .data$monitoring_location_id,
+      station_name = .data$monitoring_location_name
+    ) |> 
+    dplyr::mutate(
+      latitude = sf::st_coordinates(.data$geometry)[, 2],
+      longitude = sf::st_coordinates(.data$geometry)[, 1]
+    ) |> 
+    sf::st_drop_geometry()
 
   df
 }

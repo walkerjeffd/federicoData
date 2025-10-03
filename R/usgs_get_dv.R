@@ -5,7 +5,7 @@
 #' @param date_min start date
 #' @param date_max end date
 #' @param stat_code statistic code (default 00003 = daily mean)
-#' @param raw returns raw dataset returned from dataRetrieval::readNWISdv() if True, otherwise applies usgs_clean_dv()
+#' @param raw returns raw dataset returned from dataRetrieval::read_waterdata_daily() if True, otherwise applies usgs_clean_dv()
 #'
 #' @return data frame (if raw = TRUE), otherwise tibble
 #' @export
@@ -29,12 +29,21 @@ usgs_get_dv <- function(station_ids, param, date_min, date_max, stat_code = "000
     stop("unknown parameter")
   }
 
-  df <- dataRetrieval::readNWISdv(
-    siteNumbers = station_ids,
-    parameterCd = param_code,
-    startDate = as.character(date_min),
-    endDate = as.character(date_max),
-    statCd = stat_code
+  df <- dataRetrieval::read_waterdata_daily(
+    monitoring_location_id = paste0("USGS-", station_ids),
+    parameter_code = param_code,
+    statistic_id = stat_code,
+    time = c(as.character(date_min), as.character(date_max)),
+    properties = c(
+      "monitoring_location_id",
+      "parameter_code",
+      "statistic_id",
+      "time",
+      "value",
+      "unit_of_measure",
+      "approval_status"
+    ),
+    skipGeometry = TRUE
   )
 
   if (nrow(df) == 0) {

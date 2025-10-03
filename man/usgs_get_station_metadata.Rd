@@ -9,7 +9,7 @@ usgs_get_station_metadata(station_ids, raw = FALSE)
 \arguments{
 \item{station_ids}{character vector of station IDs}
 
-\item{raw}{return raw response from dataRetrieval::readNWISsite() if TRUE, otherwise returns tibble with subset of columns}
+\item{raw}{return raw response from dataRetrieval::read_waterdata_monitoring_location() if TRUE, otherwise returns tibble with subset of columns}
 }
 \value{
 tibble with columns \code{station_id}, \code{station_name}, \code{latitude}, \code{longitude} (if \code{raw=FALSE})

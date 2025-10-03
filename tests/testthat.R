@@ -1,4 +1,4 @@
 library(testthat)
-library(faahydro)
+library(federicoData)
 
-test_check("faahydro")
+test_check("federicoData")

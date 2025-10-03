@@ -1,12 +1,10 @@
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
-# faahydro
+# federicoData
 
 <!-- badges: start -->
 
 <!-- badges: end -->
 
-faahydro is an R package for fetching, processing, and analyzing
+federicoData is an R package for fetching, processing, and analyzing
 hydrologic and water quality data. This package was created to support
 work in South Florida by Federico & Associates, Inc.
 
@@ -17,13 +15,13 @@ This package is currently only available on github. Use the
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("walkerjeffd/faahydro")
+devtools::install_github("walkerjeffd/federicoData")
 ```
 
 Then load the package
 
 ``` r
-library(faahydro)
+library(federicoData)
 ```
 
 ## Logging
@@ -33,7 +31,7 @@ package](https://github.com/daroczig/logger) for logging. Set the log
 threshold by:
 
 ``` r
-logger::log_threshold(logger::DEBUG, namespace = "faahydro")
+logger::log_threshold(logger::DEBUG, namespace = "federicoData")
 ```
 
 ## DBHYDRO Data

@@ -1,8 +1,8 @@
-Package: faahydro
-Title: Tools for fetching, processing, and analyzing hydrologic datasets in South Florida
+Package: federicoData
+Title: Tools for fetching, processing, and analyzing hydrologic datasets
 Version: 1.0.0
 Authors@R: 
-    person(given = "Jeffrey",
+    person(given = "Jeff",
            family = "Walker",
            role = c("aut", "cre"),
            email = "jeff@walkerenvres.com",
@@ -24,10 +24,7 @@ Imports:
     lubridate,
     janitor,
     purrr,
-    httr,
-    rvest,
     dplyr,
-    stringr,
     tidyr,
     rlang,
     DBI,

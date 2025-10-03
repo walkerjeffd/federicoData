@@ -1,6 +1,6 @@
 Package: federicoData
 Title: Tools for fetching, processing, and analyzing hydrologic datasets
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: 
     person(given = "Jeff",
            family = "Walker",
